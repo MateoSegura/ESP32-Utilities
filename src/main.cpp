@@ -84,8 +84,6 @@ void loop()
 {
   // print the results to the serial monitor:
 
-  byte retval = 0;
-
   myTerminal.print("Channel ");
   myTerminal.print(String(confChan));
   myTerminal.print(" Single Ended");
