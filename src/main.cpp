@@ -4,12 +4,13 @@
 #define TIME_STAMP_uS false
 
 Terminal myTerminal;
+RealTimeClock myRTC;
 
 void setup()
 {
   // -- Begin UART port for debug output
   Serial.begin(115200);
-  
+
   myTerminal.begin(&Serial, TIME_STAMP_uS);
 
   // Print App title

@@ -25,4 +25,7 @@
 // * Terminal
 #include "libraries/terminal/terminal.h"
 
+// * Real Time Clock
+#include "libraries/real_time_clock/rtc.h"
+
 // End.

@@ -1,7 +1,7 @@
 /* 
 * Company: ANZE Suspension
-* File Name: ESP32UtilitiesTerminal.cpp
-* Project: ESP32 Utilities Terminal
+* File Name: Terminal.cpp
+* Project: ESP32 Utilities
 * Version: 1.0
 * Compartible Hardware: 
 * Date Created: September 8, 2021
@@ -14,7 +14,6 @@
 #include "terminal.h"
 
 //*****************************************       TERMINAL CLASS FUNCTIONS DEFINTION       ******************************************/
-// * Begin
 void Terminal::begin(HardwareSerial *app_uart_port, bool time_stamp_micros_enabled)
 {
     terminal_enabled = true;
@@ -23,14 +22,12 @@ void Terminal::begin(HardwareSerial *app_uart_port, bool time_stamp_micros_enabl
     time_stamp_micros = time_stamp_micros_enabled;
 }
 
-// * End
 void Terminal::end()
 {
     Terminal::printMessage(TerminalMessage("Terminal ended", "TER", INFO, micros()));
     terminal_enabled = false;
 }
 
-// * Print debug message to serial port
 void Terminal::printMessage(TerminalMessage debug_message)
 {
     if (terminal_enabled)
@@ -87,7 +84,6 @@ void Terminal::println(String message)
 }
 
 //*********************************************       PRIVATE FUNCTIONS DEFINTION       ********************************************/
-// * Create Time Stamp
 String Terminal::createTimeStamp(unsigned long event_time)
 {
     String temp_string;
@@ -129,7 +125,6 @@ String Terminal::createTimeStamp(unsigned long event_time)
     return temp_string;
 }
 
-// * Create Process Time Stamp
 String Terminal::createProcessTimeStamp(unsigned long process_time)
 {
     String temp_message;
