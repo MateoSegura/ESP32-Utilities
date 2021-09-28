@@ -35,7 +35,10 @@
 #include "libraries/soc/soc.h"
 
 // * Analog to Digital Converters
-#include "libraries/adc/chips/ads1015.h"
+#include "libraries/adc/chips/ads1015/ads1015.h"
+#include "libraries/adc/chips/ard1867/Ard1863.h"
+
+//TODO: Clean up & convert library to new format
 
 // * Bluetooth Low Energy
 #include "libraries/bluetooth/bluetooth_low_energy/ble.h"
