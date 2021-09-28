@@ -1,7 +1,7 @@
 #pragma once
 /* 
 * Company: ANZE Suspension
-* File Name: ESP32UtilitiesBLEserver.h
+* File Name: rtc.h
 * Project: ESP32 Utilities
 * Version: 1.0
 * Compartible Hardware: 
@@ -10,10 +10,6 @@
 *
 * Copyright 2021, Mateo Segura, All rights reserved.
 */
-
-//* To do list:
-//TODO: Implement weekday functionality in update time function
-//TODO: Implement string return functionality
 
 //*********************************************************     READ ME    **********************************************************/
 
@@ -30,7 +26,7 @@
 
 //*****************************************************       DATA TYPES        *****************************************************/
 
-//***********************************************      REAL TIME CLOCK CLASS        ************************************************/
+//************************************************      REAL TIME CLOCK CLASS        ************************************************/
 class RealTimeClock
 {
 public:

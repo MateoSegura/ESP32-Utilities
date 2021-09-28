@@ -3,15 +3,17 @@
 
 #define TIME_STAMP_uS false
 
+SystemOnChip SoC;
+ADS1015 ads1015;
 Terminal myTerminal;
 RealTimeClock myRTC;
 
 void setup()
 {
   // -- Begin UART port for debug output
-  Serial.begin(115200);
+  SoC.uart0.begin(115200);
 
-  myTerminal.begin(&Serial, TIME_STAMP_uS);
+  myTerminal.begin(&SoC.uart0, TIME_STAMP_uS);
 
   // Print App title
   myTerminal.println("\n\n");

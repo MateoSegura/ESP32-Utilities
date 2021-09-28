@@ -28,4 +28,13 @@
 // * Real Time Clock
 #include "libraries/real_time_clock/rtc.h"
 
+//TODO: Implement weekday functionality in update time function
+//TODO: Implement string return functionality
+
+// * System on Chip
+#include "libraries/soc/soc.h"
+
+// * Analog to Digital Converters
+#include "libraries/adc/chips/ads1015.h"
+
 // End.
