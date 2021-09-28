@@ -13,7 +13,7 @@ ADS1015 ads1015;
 void setup()
 {
   // -- Begin UART port for debug output
-  SoC.uart0.begin(115200);
+  SoC.uart0.begin(500000);
 
   myTerminal.begin(&SoC.uart0, TIME_STAMP_uS);
 
