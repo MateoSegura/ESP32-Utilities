@@ -37,4 +37,13 @@
 // * Analog to Digital Converters
 #include "libraries/adc/chips/ads1015.h"
 
+// * Bluetooth Low Energy
+#include "libraries/bluetooth/bluetooth_low_energy/ble.h"
+
+//TODO: Implement JSON & SPIFFS config setting
+//TODO: Implement Bluetooth Server Mode (multiconnect?)
+//TODO: Implement Bluetooth Client Mode (multiconnect?)
+//TODO: Pass client object to send data function
+//TODO: Add library documentation: https://learn.adafruit.com/the-well-automated-arduino-library/doxygen-tips
+
 // End.

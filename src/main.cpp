@@ -4,9 +4,11 @@
 #define TIME_STAMP_uS false
 
 SystemOnChip SoC;
-ADS1015 ads1015;
+BluetoothLowEnergyServer myBLEserver;
 Terminal myTerminal;
 RealTimeClock myRTC;
+
+ADS1015 ads1015;
 
 void setup()
 {
