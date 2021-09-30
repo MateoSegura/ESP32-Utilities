@@ -9,14 +9,17 @@ Terminal myTerminal;
 RealTimeClock myRTC;
 
 ARD1867 myADC;
+LTC1867 ltc1867;
 ADS1015 ads1015;
 
 // * HSPI
-#define ADC_CS_PIN 25
+#define ADC_CS_PIN 4
 #define HSPI_SDI_PIN 23
 #define HSPI_SDO_PIN 19
 #define HSPI_SCK_PIN 18
-#define HSPI_SCK_FREQUENCY 80000
+#define HSPI_SCK_FREQUENCY 40000
+
+void sampleADC();
 
 void setup()
 {
@@ -37,25 +40,22 @@ void setup()
                                               INFO,
                                               micros());
 
+  // -- Enable ADC (P Channel MOSFET)
+
   // -- Begin SPI bus for ADC
   SoC.hspi.begin(HSPI_SCK_PIN, HSPI_SDO_PIN, HSPI_SDI_PIN);
-  SoC.hspi.setDataMode(1);
   SoC.hspi.setFrequency(HSPI_SCK_FREQUENCY);
 
   // -- Begin ADC
-  byte err = myADC.begin(&SoC.hspi, DEVICE_LTC1867, ARD186X_EEP_DISABLE, ADC_CS_PIN);
+  uint16_t reading = ltc1867.begin(ADC_CS_PIN, SoC.hspi, HSPI_SCK_FREQUENCY);
 
-  myTerminal.printMessage(TerminalMessage("ADC error code: " + String(err),
-                                          "APP",
-                                          INFO,
-                                          micros()));
-
-  myADC.setFastSPI(1);
-  myADC.ltc186xChangeChannel(LTC186X_CHAN_SINGLE_0P, 1);
-
-  myTerminal.printMessage(myMessage);
+  myTerminal.println(String(reading));
 }
-byte loopCounter = 0;
+
+void loop()
+{
+  delay(10);
+}
 
 void speedProfile()
 {
@@ -79,8 +79,9 @@ void speedProfile()
 }
 
 byte confChan = 0;
+byte loopCounter = 0;
 
-void loop()
+void sampleADC()
 {
   // print the results to the serial monitor:
 

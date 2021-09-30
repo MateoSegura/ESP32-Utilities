@@ -163,9 +163,9 @@ void ARD1867::setFastSPI(byte speedySPI)
 		this->flags |= ARD186X_SKIP_SPI_TRANSACTION;
 }
 
-byte ARD1867::begin(SPIClass *spi_class, byte deviceType, byte eepromAddress, int cs_pin = 3)
+byte ARD1867::begin(SPIClass *spi_in_class, byte deviceType, byte eepromAddress, int cs_pin = 3)
 {
-	this->spi_class = spi_class;
+	this->spi_class = spi_in_class;
 	byte retval = 0;
 	byte i;
 	this->flags = 0;
@@ -182,14 +182,17 @@ byte ARD1867::begin(SPIClass *spi_class, byte deviceType, byte eepromAddress, in
 	else
 		init_status |= ARD186X_LTC186X_ERR;
 
-	current186xConfig = LTC186X_CHAN_DIFF_0P_1N;
-
-	spi_class->begin();
+	current186xConfig = LTC186X_CHAN_SINGLE_0P;
+#define HSPI_SDI_PIN 19
+#define HSPI_SDO_PIN 23
+#define HSPI_SCK_PIN 18
+	spi_class->begin(HSPI_SCK_PIN, HSPI_SDO_PIN, HSPI_SDI_PIN, 4);
 
 	spi_class->beginTransaction(SPISettings(ARD186x_SPI_CLOCK_FREQ, MSBFIRST, SPI_MODE0));
 	digitalWrite(this->cs_pin, LOW);
 	spi_class->transfer(current186xConfig);
 	spi_class->transfer(0);
+	spi_class->transfer(255);
 	digitalWrite(this->cs_pin, HIGH);
 	spi_class->endTransaction();
 
