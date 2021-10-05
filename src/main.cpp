@@ -37,7 +37,7 @@ void setup()
                                               "APP",
                                               INFO,
                                               micros());
-
+  
   // -- Enable ADC (P Channel MOSFET)
 
   // -- Begin SPI bus for ADC
@@ -57,7 +57,11 @@ void setup()
   }
 }
 
+<<<<<<< HEAD
 void loop()
 {
   delay(10);
 }
+=======
+// End.
+>>>>>>> 7668d6f1154ac4f856621bf3a28a0b6bd2712f37
