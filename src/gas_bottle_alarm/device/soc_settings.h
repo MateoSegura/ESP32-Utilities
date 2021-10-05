@@ -1,0 +1,5 @@
+
+
+//* UART0
+#define TIME_STAMP_uS_ENABLED false
+#define UART0_BAUD_RATE 115200

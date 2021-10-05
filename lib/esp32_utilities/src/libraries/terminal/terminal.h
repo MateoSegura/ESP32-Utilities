@@ -75,6 +75,8 @@ enum TERMINAL_MESSAGE_TYPE
 class TerminalMessage
 {
 public:
+    TerminalMessage() {}
+
     TerminalMessage(String message_body, String message_system, TERMINAL_MESSAGE_TYPE message_type, long time_stamp = 0, long process_time_taken = 0)
     {
         body = message_body;

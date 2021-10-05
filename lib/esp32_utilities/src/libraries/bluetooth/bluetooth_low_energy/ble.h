@@ -26,7 +26,6 @@
 // *
 // * * Future Improvements:
 // *
-// * Written by: Mateo Segura
 
 //*****************************************************     LIBRARY SETTINGS    *****************************************************/
 #define MAX_MTU_SIZE 185 // * THIS IS THE LARGET MTU SIZE ALLOWS IN IOS
