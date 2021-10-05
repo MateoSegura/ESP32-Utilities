@@ -32,15 +32,15 @@ void ARD1867::ltc186xSleep()
 	current186xConfig |= _BV(LTC186X_CONFIG_SLP);
 
 	if (!(this->flags & ARD186X_SKIP_SPI_TRANSACTION))
-		spi_class->beginTransaction(SPISettings(ARD186x_SPI_CLOCK_FREQ, MSBFIRST, SPI_MODE0));
+		spi_class.beginTransaction(SPISettings(ARD186x_SPI_CLOCK_FREQ, MSBFIRST, SPI_MODE0));
 
 	digitalWrite(this->cs_pin, LOW);
-	spi_class->transfer(current186xConfig);
-	spi_class->transfer(0);
+	spi_class.transfer(current186xConfig);
+	spi_class.transfer(0);
 	digitalWrite(this->cs_pin, HIGH);
 
 	if (!(this->flags & ARD186X_SKIP_SPI_TRANSACTION))
-		spi_class->endTransaction();
+		spi_class.endTransaction();
 }
 
 void ARD1867::ltc186xWake()
@@ -49,15 +49,15 @@ void ARD1867::ltc186xWake()
 	current186xConfig &= ~_BV(LTC186X_CONFIG_SLP);
 
 	if (!(this->flags & ARD186X_SKIP_SPI_TRANSACTION))
-		spi_class->beginTransaction(SPISettings(ARD186x_SPI_CLOCK_FREQ, MSBFIRST, SPI_MODE0));
+		spi_class.beginTransaction(SPISettings(ARD186x_SPI_CLOCK_FREQ, MSBFIRST, SPI_MODE0));
 
 	digitalWrite(this->cs_pin, LOW);
-	spi_class->transfer(current186xConfig);
-	spi_class->transfer(0);
+	spi_class.transfer(current186xConfig);
+	spi_class.transfer(0);
 	digitalWrite(this->cs_pin, HIGH);
 
 	if (!(this->flags & ARD186X_SKIP_SPI_TRANSACTION))
-		spi_class->endTransaction();
+		spi_class.endTransaction();
 
 	// Wake-up time if we were really sleeping
 	if (wasSleeping)
@@ -68,26 +68,26 @@ unsigned int ARD1867::ltc186xRead()
 {
 	uint16_t retval = 0;
 	if (!(this->flags & ARD186X_SKIP_SPI_TRANSACTION))
-		spi_class->beginTransaction(SPISettings(ARD186x_SPI_CLOCK_FREQ, MSBFIRST, SPI_MODE0));
+		spi_class.beginTransaction(SPISettings(ARD186x_SPI_CLOCK_FREQ, MSBFIRST, SPI_MODE0));
 
 	digitalWrite(this->cs_pin, LOW);
 	if (DEVICE_LTC1863 == ltc186xDeviceType)
 	{
-		retval = spi_class->transfer(current186xConfig);
+		retval = spi_class.transfer(current186xConfig);
 		retval <<= 4;
-		retval |= 0x0F & (spi_class->transfer(0) >> 4);
+		retval |= 0x0F & (spi_class.transfer(0) >> 4);
 	}
 	else if (DEVICE_LTC1867 == ltc186xDeviceType)
 	{
-		retval = spi_class->transfer(current186xConfig);
+		retval = spi_class.transfer(current186xConfig);
 		retval <<= 8;
-		retval |= 0xFF & spi_class->transfer(0);
+		retval |= 0xFF & spi_class.transfer(0);
 	}
 
 	digitalWrite(this->cs_pin, HIGH);
 
 	if (!(this->flags & ARD186X_SKIP_SPI_TRANSACTION))
-		spi_class->endTransaction();
+		spi_class.endTransaction();
 
 	return (retval);
 }
@@ -107,21 +107,34 @@ void ARD1867::ltc186xChangeChannel(byte nextChannel, byte unipolar = 1)
 	internalChangeChannel(nextChannel, unipolar);
 
 	if (!(this->flags & ARD186X_SKIP_SPI_TRANSACTION))
-		spi_class->beginTransaction(SPISettings(ARD186x_SPI_CLOCK_FREQ, MSBFIRST, SPI_MODE0));
+		spi_class.beginTransaction(SPISettings(ARD186x_SPI_CLOCK_FREQ, MSBFIRST, SPI_MODE0));
 
 	digitalWrite(this->cs_pin, LOW);
-	spi_class->transfer(current186xConfig);
-	spi_class->transfer(0);
+	spi_class.transfer(current186xConfig);
+	spi_class.transfer(0);
 	digitalWrite(this->cs_pin, HIGH);
 
 	if (!(this->flags & ARD186X_SKIP_SPI_TRANSACTION))
-		spi_class->endTransaction();
+		spi_class.endTransaction();
 }
 
-void ARD1867::internalChangeChannel(byte nextChannel, byte unipolar)
+byte ARD1867::internalChangeChannel(byte nextChannel, byte unipolar)
 {
-	current186xConfig = unipolar ? _BV(LTC186X_CONFIG_UNI) : 0;
-	current186xConfig |= nextChannel & (_BV(LTC186X_CONFIG_SINGLE_END) | _BV(LTC186X_CONFIG_ODD) | _BV(LTC186X_CONFIG_S1) | _BV(LTC186X_CONFIG_S0) | _BV(LTC186X_CONFIG_COM));
+	switch (nextChannel)
+	{
+	case 0:
+		current186xConfig = LTC186X_CHAN_SINGLE_0P;
+		break;
+	case 1:
+		current186xConfig = LTC186X_CHAN_SINGLE_1P;
+		break;
+	case 2:
+		current186xConfig = LTC186X_CHAN_SINGLE_2P;
+		break;
+
+	default:
+		break;
+	}
 }
 
 unsigned int ARD1867::ltc186xReadAndChangeChannel(byte nextChannel, byte unipolar = 1)
@@ -163,13 +176,13 @@ void ARD1867::setFastSPI(byte speedySPI)
 		this->flags |= ARD186X_SKIP_SPI_TRANSACTION;
 }
 
-byte ARD1867::begin(SPIClass *spi_in_class, byte deviceType, byte eepromAddress, int cs_pin = 3)
+byte ARD1867::begin(SPIClass spi_in_class, byte deviceType, byte eepromAddress, int adc_cs_pin = 3)
 {
-	this->spi_class = spi_in_class;
+	spi_class = spi_in_class;
 	byte retval = 0;
 	byte i;
 	this->flags = 0;
-	this->cs_pin = cs_pin;
+	cs_pin = adc_cs_pin;
 
 	pinMode(this->cs_pin, OUTPUT);
 	digitalWrite(this->cs_pin, HIGH);
@@ -183,18 +196,14 @@ byte ARD1867::begin(SPIClass *spi_in_class, byte deviceType, byte eepromAddress,
 		init_status |= ARD186X_LTC186X_ERR;
 
 	current186xConfig = LTC186X_CHAN_SINGLE_0P;
-#define HSPI_SDI_PIN 19
-#define HSPI_SDO_PIN 23
-#define HSPI_SCK_PIN 18
-	spi_class->begin(HSPI_SCK_PIN, HSPI_SDO_PIN, HSPI_SDI_PIN, 4);
 
-	spi_class->beginTransaction(SPISettings(ARD186x_SPI_CLOCK_FREQ, MSBFIRST, SPI_MODE0));
+	spi_class.beginTransaction(SPISettings(ARD186x_SPI_CLOCK_FREQ, MSBFIRST, SPI_MODE0));
 	digitalWrite(this->cs_pin, LOW);
-	spi_class->transfer(current186xConfig);
-	spi_class->transfer(0);
-	spi_class->transfer(255);
+	spi_class.transfer(current186xConfig);
+	spi_class.transfer(0);
+	spi_class.transfer(255);
 	digitalWrite(this->cs_pin, HIGH);
-	spi_class->endTransaction();
+	spi_class.endTransaction();
 
 	this->WireInterface->begin();
 

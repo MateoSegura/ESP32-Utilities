@@ -57,14 +57,14 @@ LICENSE:
 #define LTC186X_CHAN_DIFF_5P_7COM (_BV(LTC186X_CONFIG_COM) | _BV(LTC186X_CONFIG_SINGLE_END) | _BV(LTC186X_CONFIG_ODD) | _BV(LTC186X_CONFIG_S1))
 #define LTC186X_CHAN_DIFF_6P_7COM (_BV(LTC186X_CONFIG_COM) | _BV(LTC186X_CONFIG_SINGLE_END) | _BV(LTC186X_CONFIG_S1) | _BV(LTC186X_CONFIG_S0))
 
-#define LTC186X_CHAN_SINGLE_0P (_BV(LTC186X_CONFIG_SINGLE_END))
-#define LTC186X_CHAN_SINGLE_1P (_BV(LTC186X_CONFIG_SINGLE_END) | _BV(LTC186X_CONFIG_ODD))
-#define LTC186X_CHAN_SINGLE_2P (_BV(LTC186X_CONFIG_SINGLE_END) | _BV(LTC186X_CONFIG_S0))
-#define LTC186X_CHAN_SINGLE_3P (_BV(LTC186X_CONFIG_SINGLE_END) | _BV(LTC186X_CONFIG_ODD) | _BV(LTC186X_CONFIG_S0))
-#define LTC186X_CHAN_SINGLE_4P (_BV(LTC186X_CONFIG_SINGLE_END) | _BV(LTC186X_CONFIG_S1))
-#define LTC186X_CHAN_SINGLE_5P (_BV(LTC186X_CONFIG_SINGLE_END) | _BV(LTC186X_CONFIG_ODD) | _BV(LTC186X_CONFIG_S1))
-#define LTC186X_CHAN_SINGLE_6P (_BV(LTC186X_CONFIG_SINGLE_END) | _BV(LTC186X_CONFIG_S1) | _BV(LTC186X_CONFIG_S0))
-#define LTC186X_CHAN_SINGLE_7P (_BV(LTC186X_CONFIG_SINGLE_END) | _BV(LTC186X_CONFIG_ODD) | _BV(LTC186X_CONFIG_S1) | _BV(LTC186X_CONFIG_S0))
+#define LTC186X_CHAN_SINGLE_0P 0x80
+#define LTC186X_CHAN_SINGLE_1P 0xC0
+#define LTC186X_CHAN_SINGLE_2P 0x90
+#define LTC186X_CHAN_SINGLE_3P 0xD0
+#define LTC186X_CHAN_SINGLE_4P 0xA0
+#define LTC186X_CHAN_SINGLE_5P 0xE0
+#define LTC186X_CHAN_SINGLE_6P 0xB0
+#define LTC186X_CHAN_SINGLE_7P 0xF0
 
 #define ARD186X_SUCCESS 0
 #define ARD186X_LTC186X_ERR 1
@@ -89,7 +89,7 @@ class ARD1867
 {
 public:
 	ARD1867();
-	byte begin(SPIClass *spi_class, byte deviceType, byte eepromAddress, int cs_pin);
+	byte begin(SPIClass spi_class, byte deviceType, byte eepromAddress, int cs_pin);
 
 	const char *eui48Get();
 	byte eepromRead(int address, byte defaultOnError);
@@ -109,7 +109,7 @@ public:
 	void ltc186xWake();
 
 private:
-	void internalChangeChannel(byte nextChannel, byte unipolar);
+	byte internalChangeChannel(byte nextChannel, byte unipolar);
 	uint8_t init_status;
 	uint8_t i2cAddr_eeprom;
 	uint8_t current186xConfig;
@@ -117,7 +117,7 @@ private:
 	int cs_pin;
 	byte flags;
 	TwoWire *WireInterface;
-	SPIClass* spi_class;
+	SPIClass spi_class;
 	char eui48[6 * 2 + 1];
 };
 

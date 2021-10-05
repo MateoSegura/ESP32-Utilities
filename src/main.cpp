@@ -8,16 +8,14 @@ BluetoothLowEnergyServer myBLEserver;
 Terminal myTerminal;
 RealTimeClock myRTC;
 
-ARD1867 myADC;
-LTC1867 ltc1867;
-ADS1015 ads1015;
+AD7689 ad7689;
 
 // * HSPI
 #define ADC_CS_PIN 4
 #define HSPI_SDI_PIN 23
 #define HSPI_SDO_PIN 19
 #define HSPI_SCK_PIN 18
-#define HSPI_SCK_FREQUENCY 40000
+#define HSPI_SCK_FREQUENCY 20000
 
 void sampleADC();
 
@@ -47,100 +45,19 @@ void setup()
   SoC.hspi.setFrequency(HSPI_SCK_FREQUENCY);
 
   // -- Begin ADC
-  uint16_t reading = ltc1867.begin(ADC_CS_PIN, SoC.hspi, HSPI_SCK_FREQUENCY);
+  ESP_ERROR init_adc = ad7689.begin(ADC_CS_PIN, SoC.hspi, HSPI_SCK_FREQUENCY);
 
-  myTerminal.println(String(reading));
+  if (init_adc.on_error)
+  {
+    myTerminal.println(init_adc.debug_message);
+  }
+  else
+  {
+    myTerminal.println("ADC initialized correctly");
+  }
 }
 
 void loop()
 {
   delay(10);
 }
-
-void speedProfile()
-{
-  unsigned int k = 0;
-  unsigned long startTime, endTime;
-
-  myADC.ltc186xChangeChannel(LTC186X_CHAN_SINGLE_0P, 1);
-
-  myTerminal.print("Starting speed profile on channel 0\n");
-
-  startTime = millis();
-  for (unsigned long i = 0; i < 100000; i++)
-  {
-    k += myADC.ltc186xRead();
-  }
-  endTime = millis();
-
-  myTerminal.print("Max data rate ");
-  myTerminal.print(String(100000UL / (endTime - startTime)));
-  myTerminal.print(" ksps\n");
-}
-
-byte confChan = 0;
-byte loopCounter = 0;
-
-void sampleADC()
-{
-  // print the results to the serial monitor:
-
-  myTerminal.print("Channel ");
-  myTerminal.print(String(confChan));
-  myTerminal.print(" Single Ended");
-  myTerminal.print(" = [");
-  myTerminal.print(String(myADC.ltc186xRead()));
-  myTerminal.print("]\n");
-
-  confChan++;
-  if (confChan >= 8)
-  {
-    myTerminal.print("\n");
-    confChan = 0;
-
-    if (0 == loopCounter)
-    {
-      // Every 28 loops, run the speed profiler
-      speedProfile();
-    }
-    loopCounter = (loopCounter + 1) % 4;
-  }
-  switch (confChan)
-  {
-  case 0:
-    myADC.ltc186xChangeChannel(LTC186X_CHAN_SINGLE_0P, 1);
-    break;
-
-  case 1:
-    myADC.ltc186xChangeChannel(LTC186X_CHAN_SINGLE_1P, 1);
-    break;
-
-  case 2:
-    myADC.ltc186xChangeChannel(LTC186X_CHAN_SINGLE_2P, 1);
-    break;
-
-  case 3:
-    myADC.ltc186xChangeChannel(LTC186X_CHAN_SINGLE_3P, 1);
-    break;
-
-  case 4:
-    myADC.ltc186xChangeChannel(LTC186X_CHAN_SINGLE_4P, 1);
-    break;
-
-  case 5:
-    myADC.ltc186xChangeChannel(LTC186X_CHAN_SINGLE_5P, 1);
-    break;
-
-  case 6:
-    myADC.ltc186xChangeChannel(LTC186X_CHAN_SINGLE_6P, 1);
-    break;
-
-  case 7:
-    myADC.ltc186xChangeChannel(LTC186X_CHAN_SINGLE_7P, 1);
-    break;
-  }
-
-  delay(500);
-}
-
-// End.
