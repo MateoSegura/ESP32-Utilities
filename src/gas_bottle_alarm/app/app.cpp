@@ -41,15 +41,15 @@ void BottleBirdApp::begin()
                             "Terminal Setup",
                             10000,
                             NULL,
-                            1,
+                            25,
                             NULL,
-                            1);
+                            0);
 
     xTaskCreatePinnedToCore(setupDeepSleepManager,
                             "Deep Sleep Setup",
                             10000,
                             NULL,
-                            1,
+                            24,
                             NULL,
                             1);
 
@@ -57,9 +57,15 @@ void BottleBirdApp::begin()
                             "Deep Sleep Setup",
                             10000,
                             NULL,
-                            1,
+                            23,
                             NULL,
                             0);
+
+    // Await to continue boot until device settings are read correctly
+
+    xSemaphoreTake(start_main, portMAX_DELAY);
+
+    esp.uart0.println("\n\nDevice settings were read correctly\n\nEnd.");
 
     vTaskDelete(NULL); // Delete setup & loop RTOS tasks.
 }
@@ -68,6 +74,22 @@ ESP_ERROR BottleBirdApp::setupRTOS()
 {
     ESP_ERROR err;
     err.on_error = false;
+
+    //* Device boot & setup
+    start_main = xSemaphoreCreateMutex();
+    start_pairing = xSemaphoreCreateMutex();
+
+    if (start_main == NULL || start_pairing == NULL)
+    {
+        err.on_error = true;
+        err.debug_message = "Could not create boot semaphores.";
+        while (1)
+        {
+        }
+    }
+
+    xSemaphoreTake(start_main, 0);
+    xSemaphoreTake(start_pairing, 0);
 
     //* Terminal
     debug_message_queue = xQueueCreate(debug_message_queue_length, sizeof(TerminalMessage)); // Queue
