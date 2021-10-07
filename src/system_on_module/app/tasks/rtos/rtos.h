@@ -36,6 +36,8 @@ ESP_ERROR Application::setupRTOS()
     ESP_ERROR terminal_rtos = terminalRTOS();
     if (terminal_rtos.on_error)
         return err;
+
+    return err;
 }
 
 //******************************************************      DECLARATION        *******************************************************/
