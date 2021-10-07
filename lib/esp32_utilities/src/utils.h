@@ -21,7 +21,11 @@
 class ESP_ERROR
 {
 public:
-    ESP_ERROR() {}
+    ESP_ERROR()
+    {
+        on_error = false;
+        debug_message = "";
+    }
 
     ESP_ERROR(bool err, String error_message)
     {

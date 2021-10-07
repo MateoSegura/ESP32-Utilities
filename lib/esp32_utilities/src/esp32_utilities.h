@@ -22,6 +22,8 @@
 
 //*****************************************************        LIBRARIES        *****************************************************/
 
+#include "utils.h"
+
 // * Terminal
 #include "libraries/terminal/terminal.h"
 

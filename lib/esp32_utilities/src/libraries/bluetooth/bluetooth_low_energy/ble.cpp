@@ -17,21 +17,25 @@
 //*****************************************       BLE SERVER CLASS FUNCTIONS DEFINTION       ****************************************/
 
 // * Begin
-void BluetoothLowEnergyServer::begin(BLEServerCallbacks *callback, BLECharacteristicCallbacks *characteristic_callback)
+void BluetoothLowEnergyServer::begin(const char *device_name,
+                                     const char *service_uuid,
+                                     const char *characteristic_uuid,
+                                     BLEServerCallbacks *callback,
+                                     BLECharacteristicCallbacks *characteristic_callback)
 {
     // Create the BLE Device
-    BLEDevice::init(DEVICE_NAME);
+    BLEDevice::init(device_name);
 
     // Create the BLE Server
     pServer = BLEDevice::createServer();
     pServer->setCallbacks(callback);
 
     // Create the BLE Service
-    BLEService *pService = pServer->createService(SERVICE_UUID);
+    BLEService *pService = pServer->createService(service_uuid);
 
     // Create a BLE Characteristic
     pUARTcharacteristic = pService->createCharacteristic(
-        CHARACTERISTIC_UUID_UART,
+        characteristic_uuid,
         BLECharacteristic::PROPERTY_READ |
             BLECharacteristic::PROPERTY_WRITE |
             BLECharacteristic::PROPERTY_NOTIFY |

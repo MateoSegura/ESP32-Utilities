@@ -8,19 +8,15 @@
 * Last Modified: September 23, 2021
 */
 
-#include <gas_bottle_alarm/app/app.h>
+#include <system_on_module/app/app.h>
 
-BottleBirdApp app;
+Application app;
 
 void setup()
 {
   app.begin();
 }
 
-void loop()
-{
-  esp.uart0.println(
-      "App should never get here. Make sure to delete setup & loop using \"vTaskDelete(NULL)\" at the end of your app begin function.");
-}
+void loop() {}
 
 // End.

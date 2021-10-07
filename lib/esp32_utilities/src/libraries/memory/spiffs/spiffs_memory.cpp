@@ -241,4 +241,100 @@ ESP_ERROR SPIFFS_Memory::deleteFile(const char *path)
     return err;
 }
 
+ESP_ERROR SPIFFS_Memory::readJSON(const char *path, JsonDocument &json_document)
+{
+    ESP_ERROR err;
+    err.on_error = false;
+
+    String temp_message;
+
+    if (spiffs_initialized)
+    {
+        File file = file_system->open(path);
+
+        // Error opening file
+        if (!file)
+        {
+            err.on_error = true;
+            temp_message += "Failed to open file \"";
+            temp_message += path;
+            temp_message += "\" for reading";
+        }
+
+        // If filed opened correctly
+        else
+        {
+            DeserializationError error = deserializeJson(json_document, file);
+
+            if (error)
+            {
+                err.on_error = true;
+                temp_message += "DeserializationError error code: " + String(error.code());
+            }
+        }
+    }
+    else
+    {
+        err.on_error = true;
+        temp_message += "SPIFFS is not inititalized";
+    }
+
+    err.debug_message = temp_message;
+    return err;
+}
+
+ESP_ERROR SPIFFS_Memory::writeJSON(const char *path, JsonDocument &json_document)
+{
+    ESP_ERROR err;
+    err.on_error = false;
+
+    String temp_message;
+
+    if (spiffs_initialized)
+    {
+        File file = file_system->open(path);
+
+        // Error opening file
+        if (!file)
+        {
+            err.on_error = true;
+            temp_message += "Failed to open file \"";
+            temp_message += path;
+            temp_message += "\" for writting";
+        }
+
+        // If filed opened correctly then delete it, and rewrite the contents
+        else
+        {
+            String json_string;
+            serializeJson(json_document, json_string);
+
+            ESP_ERROR delete_json = deleteFile(path);
+
+            if (delete_json.on_error)
+            {
+                err.on_error = true;
+                err.debug_message = delete_json.debug_message;
+            }
+            else
+            {
+                ESP_ERROR write_json = writeFile(path, json_string.c_str());
+
+                if (write_json.on_error)
+                {
+                    err.on_error = true;
+                    err.debug_message = write_json.debug_message;
+                }
+            }
+        }
+    }
+    else
+    {
+        err.on_error = true;
+        temp_message += "SPIFFS is not inititalized";
+    }
+
+    err.debug_message = temp_message;
+    return err;
+}
 // End.

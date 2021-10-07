@@ -44,47 +44,9 @@ public:
     //File Operations
     ESP_ERROR readFile(const char *path, String &file_content);
 
-    ESP_ERROR readJSON(const char *path, JsonDocument &json_document)
-    {
-        ESP_ERROR err;
-        err.on_error = false;
+    ESP_ERROR readJSON(const char *path, JsonDocument &json_document);
+    ESP_ERROR writeJSON(const char *path, JsonDocument &json_document);
 
-        String temp_message;
-
-        if (spiffs_initialized)
-        {
-            File file = file_system->open(path);
-
-            // Error opening file
-            if (!file)
-            {
-                err.on_error = true;
-                temp_message += "Failed to open file \"";
-                temp_message += path;
-                temp_message += "\" for writting";
-            }
-
-            // If filed opened correctly
-            else
-            {
-                DeserializationError error = deserializeJson(json_document, file);
-
-                if (error)
-                {
-                    err.on_error = true;
-                    temp_message += "Failed to read file, using default configuration";
-                }
-            }
-        }
-        else
-        {
-            err.on_error = true;
-            temp_message += "SPIFFS is not inititalized";
-        }
-
-        err.debug_message = temp_message;
-        return err;
-    }
     ESP_ERROR writeFile(const char *path, const char *message);
     ESP_ERROR appendFile(const char *path, const char *message);
     ESP_ERROR renameFile(const char *path1, const char *path2);

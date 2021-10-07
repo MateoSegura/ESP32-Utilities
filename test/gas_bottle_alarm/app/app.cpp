@@ -3,6 +3,8 @@
 #include "gas_bottle_alarm/app/tasks/terminal/terminal.h"
 #include "gas_bottle_alarm/app/tasks/deep_sleep/deep_sleep.h"
 #include "gas_bottle_alarm/app/tasks/settings/settings.h"
+#include "gas_bottle_alarm/app/tasks/pairing/device_pairing.h"
+#include "gas_bottle_alarm/app/tasks/bluetooth_server/ble_server.h"
 
 Terminal terminal;
 SystemOnChip esp;
@@ -61,11 +63,21 @@ void BottleBirdApp::begin()
                             NULL,
                             0);
 
-    // Await to continue boot until device settings are read correctly
+    xTaskCreatePinnedToCore(pairingTask,
+                            "Pairing Task",
+                            10000,
+                            NULL,
+                            22,
+                            NULL,
+                            0);
 
-    xSemaphoreTake(start_main, portMAX_DELAY);
-
-    esp.uart0.println("\n\nDevice settings were read correctly\n\nEnd.");
+    xTaskCreatePinnedToCore(bleServerTask,
+                            "BLE server Task",
+                            10000,
+                            NULL,
+                            22,
+                            NULL,
+                            0);
 
     vTaskDelete(NULL); // Delete setup & loop RTOS tasks.
 }
@@ -104,6 +116,36 @@ ESP_ERROR BottleBirdApp::setupRTOS()
         err.on_error = true;
         err.debug_message = "Could not create Terminal messages queue objects.";
         return err;
+    }
+
+    //* Bluetooth
+    start_ble_server = xSemaphoreCreateMutex();
+    handle_ble_instruction = xSemaphoreCreateMutex();
+
+    if (start_ble_server == NULL || handle_ble_instruction == NULL)
+    {
+        err.on_error = true;
+        err.debug_message = "Could not create ble semaphore.";
+        while (1)
+        {
+        }
+    }
+    xSemaphoreTake(start_ble_server, 0);
+    xSemaphoreTake(handle_ble_instruction, 0);
+
+    ble_tx_message_queue = xQueueCreate(ble_tx_message_queue_length, sizeof(String)); // TX Queue
+    ble_rx_message_queue = xQueueCreate(ble_rx_message_queue_length, sizeof(String)); // RX Queue
+    ble_tx_message_queue_mutex = xSemaphoreCreateMutex();                             // TX Mutex
+    ble_rx_message_queue_mutex = xSemaphoreCreateMutex();                             // RX Mutex
+
+    if ((ble_tx_message_queue == NULL || ble_tx_message_queue_mutex == NULL) ||
+        (ble_rx_message_queue == NULL || ble_rx_message_queue_mutex == NULL))
+    {
+        err.on_error = true;
+        err.debug_message = "Could not create Bluetooth Low Energy messages queue objects.";
+        while (1)
+        {
+        }
     }
 
     return err;

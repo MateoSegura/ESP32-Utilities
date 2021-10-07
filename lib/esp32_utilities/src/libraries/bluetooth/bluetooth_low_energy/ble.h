@@ -50,6 +50,9 @@ class BluetoothLowEnergyServer
 public:
     // * Being bluetooth Server
     void begin(
+        const char *device_name,
+        const char *service_uuid,
+        const char *characteristic_uuid,
         BLEServerCallbacks *callback, // Call back for read/write operations
         BLECharacteristicCallbacks *characteristic_callback);
 
