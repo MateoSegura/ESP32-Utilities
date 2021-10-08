@@ -7,9 +7,7 @@ void setupTerminal(void *parameters)
     String file_content;
 
     terminal.begin(&esp.uart0);
-
-    terminal.printMessage(TerminalMessage("Terminal has been inititialized", "TER", INFO, micros()));
-
+    
     while (1)
     {
         // * Print message to console

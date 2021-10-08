@@ -41,6 +41,9 @@
 
 //TODO: Clean up & convert library to new format
 
+// * CAN bus
+#include "libraries/can/chips/MCP2518FD/MCP2518FD.h"
+
 // * Bluetooth Low Energy
 #include "libraries/bluetooth/bluetooth_low_energy/ble.h"
 
@@ -52,6 +55,11 @@
 
 // * Memory
 #include "libraries/memory/spiffs/spiffs_memory.h"
-
 //TODO: Creat SPIFFS if not initialized
+
+#include "libraries/memory/emmc/emmc_memory.h"
+//TODO: Implement SD Card library example
+//TODO: Add library documentation: https://learn.adafruit.com/the-well-automated-arduino-library/doxygen-tips
+//TODO: Implement list directory functionality
+
 // End.

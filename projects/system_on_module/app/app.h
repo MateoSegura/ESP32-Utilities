@@ -13,14 +13,19 @@
 
 //*****************************************************        LIBRARIES        *****************************************************/
 #include <Arduino.h>
-#include <esp32_utilities.h>
+
+#include "../device/device_pinout.h"
 #include "../device/soc_settings.h"
+
+#include <esp32_utilities.h>
 
 //*****************************************************         OBJECTS         *****************************************************/
 extern SystemOnChip esp;
 extern Terminal terminal;
 extern BluetoothLowEnergyServer bleServer;
 extern SPIFFS_Memory spiffsMemory;
+extern EMMC_Memory emmcMemory;
+extern MCP2518FD CAN;
 
 //*****************************************************       DATA TYPES        *****************************************************/
 

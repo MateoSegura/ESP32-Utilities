@@ -10,8 +10,11 @@
 
 //*****************************************************        LIBRARIES        *****************************************************/
 #include "app.h"
+
 #include "tasks/rtos/rtos.h"
 #include "tasks/terminal/terminal.h"
+#include "tasks/save_data/save_data.h"
+#include "tasks/read_can/read_can.h"
 
 //*****************************************************       DATA TYPES        *****************************************************/
 
@@ -20,6 +23,9 @@ SystemOnChip esp;
 Terminal terminal;
 BluetoothLowEnergyServer bleServer;
 SPIFFS_Memory spiffsMemory;
+EMMC_Memory emmcMemory;
+
+MCP2518FD CAN(CAN0_CONTROLLER_CS_PIN, esp.vspi, CAN0_CONTROLLER_INT_PIN);
 
 //*********************************************************       APP       *********************************************************/
 void Application::begin()
@@ -49,6 +55,22 @@ void Application::begin()
     //* 4. Setup terminal
     xTaskCreatePinnedToCore(setupTerminal,
                             "Terminal Setup",
+                            10000,
+                            NULL,
+                            25,
+                            NULL,
+                            0);
+
+    xTaskCreatePinnedToCore(setupSaveDataTask,
+                            "Save Data Setup",
+                            10000,
+                            NULL,
+                            25,
+                            NULL,
+                            1);
+
+    xTaskCreatePinnedToCore(setupCANbusTask,
+                            "Can bus read",
                             10000,
                             NULL,
                             25,
