@@ -67,21 +67,15 @@ class MyCallbacks : public BLECharacteristicCallbacks
         // Store incoming message in string
         if (rxValue.length() > 0)
         {
-            //TODO: Set OTA trigger here
-
             for (int i = 0; i < rxValue.length(); i++)
             {
                 instruction += rxValue[i];
                 incoming_bluetooth_message += rxValue[i];
             }
 
-            addBluetoothRXMessageToQueue(&instruction, 0);
-            xSemaphoreGive(app.handle_ble_instruction);
+            ble_rx_message = TerminalMessage(incoming_bluetooth_message, "BLE", INFO, micros());
+            addDebugMessageToQueue(&ble_rx_message);
         }
-
-        //ble_rx_message = TerminalMessage(incoming_bluetooth_message, "BLE", INFO, micros());
-
-        //addDebugMessageToQueue(&ble_rx_message);
     }
 
 } CharacteristicCallbacks;
@@ -93,15 +87,15 @@ void bleServerTask(void *parameters)
     uint8_t debug_message_queue_ticks = 0;
 
     //* 1. Await binary semaphore
-    xSemaphoreTake(app.start_ble_server, portMAX_DELAY);
+    xSemaphoreTake(app.rtos.start_ble_server, portMAX_DELAY);
 
     ble_debug_message = TerminalMessage("Starting Bluetooth Server", "BLE", INFO, micros());
     addDebugMessageToQueue(&ble_debug_message, debug_message_queue_ticks);
 
     //* 2. Begin Service
     bleServer.begin("Bottle bird",
-                    BottleBirdSettings.ble_service_uuid,
-                    BottleBirdSettings.ble_characteristic_uuid,
+                    app.device_settings.ble_service_uuid,
+                    app.device_settings.ble_characteristic_uuid,
                     &ServerCallbacks,
                     &CharacteristicCallbacks);
 
@@ -147,16 +141,16 @@ void bleServerTask(void *parameters)
 
 void addBluetoothTXMessageToQueue(String *bluetooth_message, uint16_t port_ticks)
 {
-    xSemaphoreTake(app.ble_tx_message_queue_mutex, port_ticks);
-    xQueueSend(app.ble_tx_message_queue, (void *)bluetooth_message, 0);
-    xSemaphoreGive(app.ble_tx_message_queue_mutex);
+    xSemaphoreTake(app.rtos.ble_tx_message_queue_mutex, port_ticks);
+    xQueueSend(app.rtos.ble_tx_message_queue, (void *)bluetooth_message, 0);
+    xSemaphoreGive(app.rtos.ble_tx_message_queue_mutex);
 }
 
 void addBluetoothRXMessageToQueue(String *bluetooth_message, uint16_t port_ticks)
 {
-    xSemaphoreTake(app.ble_rx_message_queue_mutex, port_ticks);
-    xQueueSend(app.ble_rx_message_queue, (void *)bluetooth_message, 0);
-    xSemaphoreGive(app.ble_rx_message_queue_mutex);
+    xSemaphoreTake(app.rtos.ble_rx_message_queue_mutex, port_ticks);
+    xQueueSend(app.rtos.ble_rx_message_queue, (void *)bluetooth_message, 0);
+    xSemaphoreGive(app.rtos.ble_rx_message_queue_mutex);
 }
 
 void bleTransmitTask(void *parameters)
@@ -177,7 +171,7 @@ void bleTransmitTask(void *parameters)
 
     while (1)
     {
-        if (xQueueReceive(app.ble_tx_message_queue, (void *)&ble_tx_message, 0) == pdTRUE)
+        if (xQueueReceive(app.rtos.ble_tx_message_queue, (void *)&ble_tx_message, 0) == pdTRUE)
         {
             initial_time = micros();
             ESP_ERROR data_sent = bleServer.sendDataToClient((char *)ble_tx_message.c_str());

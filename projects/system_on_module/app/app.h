@@ -16,6 +16,12 @@
 #include <esp32_utilities.h>
 #include "../device/soc_settings.h"
 
+//*****************************************************         OBJECTS         *****************************************************/
+extern SystemOnChip esp;
+extern Terminal terminal;
+extern BluetoothLowEnergyServer bleServer;
+extern SPIFFS_Memory spiffsMemory;
+
 //*****************************************************       DATA TYPES        *****************************************************/
 
 class ApplicationSettings
@@ -25,6 +31,7 @@ public:
     //TODO: Implement settings from & to JSON
 };
 
+//**************************************************        RTOS VARIABLES        ***************************************************/
 class ApplicationRTOS_Objects
 {
 public:
@@ -38,11 +45,9 @@ public:
     uint16_t terminal_file_queue_length = 50;
 };
 
-//*****************************************************         OBJECTS         *****************************************************/
-extern SystemOnChip esp;
-extern Terminal terminal;
-extern BluetoothLowEnergyServer bleServer;
-extern SPIFFS_Memory spiffsMemory;
+//*************************************************           INTERRUPTS           **************************************************/
+
+//*************************************************       TASKS DECLARATION        **************************************************/
 
 //*********************************************************       APP       *********************************************************/
 class Application

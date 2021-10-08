@@ -8,9 +8,10 @@
 * Last Modified: September 23, 2021
 */
 
-#include <system_on_module/app/app.h>
+//#include <system_on_module/app/app.h>
+#include <gas_bottle_alarm/app/app.h>
 
-Application app;
+BottleBirdApp app;
 
 void setup()
 {

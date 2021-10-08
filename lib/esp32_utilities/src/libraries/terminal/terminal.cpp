@@ -35,7 +35,7 @@ void Terminal::printMessage(TerminalMessage debug_message)
         String temp_message;
         String temp_message_type;
 
-        String temp_message_system = debug_message.system.substring(0, 2);
+        String temp_message_system = debug_message.system.substring(0, 4);
 
         switch (debug_message.type)
         {

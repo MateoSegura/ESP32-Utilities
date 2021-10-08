@@ -14,13 +14,29 @@
 
 //*****************************************************        LIBRARIES        *****************************************************/
 #include <Arduino.h>
-#include "gas_bottle_alarm/device/soc_settings.h"
 #include <esp32_utilities.h>
+
+#include "../device/soc_settings.h"
+#include "../device/soc_pinout.h"
+
+#include <Adafruit_NeoPixel.h>
+
+//*****************************************************         OBJECTS         *****************************************************/
+extern SystemOnChip esp;
+extern Terminal terminal;
+extern BluetoothLowEnergyServer bleServer;
+extern SPIFFS_Memory spiffsMemory;
+extern Adafruit_NeoPixel led_strip;
 
 //*****************************************************       DATA TYPES        *****************************************************/
 
 #define SETTINGS_FILE_SIZE_BYTES 3000
 #define SETTINGS_FILE "/settings.json"
+
+#define MINIMUM_BAT_VOLTAGE_FOR_BOOT_mV 3700
+
+#define NUMPIXELS 12
+#define LED_BLINKING_PERIOD_mS 30
 
 class DeviceSettings
 {
@@ -68,23 +84,9 @@ public:
 private:
 };
 
-extern RTC_DATA_ATTR DeviceSettings BottleBirdSettings;
-//*****************************************************         OBJECTS         *****************************************************/
-extern SystemOnChip esp;
-extern Terminal terminal;
-extern BluetoothLowEnergyServer bleServer;
-extern SPIFFS_Memory spiffsMemory;
-
 //**************************************************        RTOS VARIABLES        ***************************************************/
-
-//*************************************************           INTERRUPTS           **************************************************/
-
-//*************************************************       TASKS DECLARATION        **************************************************/
-
-//*********************************************************       APP       *********************************************************/
-class BottleBirdApp
+class ApplicationRTOS_Objects
 {
-
 public:
     // * Boot & setup
     SemaphoreHandle_t start_main = NULL;
@@ -93,11 +95,11 @@ public:
     // * Terminal
     QueueHandle_t debug_message_queue = NULL;
     SemaphoreHandle_t debug_message_queue_mutex = NULL;
-    uint16_t debug_message_queue_length = 100;
+    uint16_t debug_message_queue_length = 50;
 
     QueueHandle_t file_print_queue = NULL;
     SemaphoreHandle_t file_print_queue_mutex = NULL;
-    uint16_t file_print_queue_length = 100;
+    uint16_t file_print_queue_length = 5;
 
     // * Bluetooth
     SemaphoreHandle_t start_ble_server = NULL;
@@ -110,11 +112,25 @@ public:
     QueueHandle_t ble_rx_message_queue = NULL;           // Bluetooth Low Energy Server RXs
     SemaphoreHandle_t ble_rx_message_queue_mutex = NULL; // Bluetooth Low Energy Server RX
     uint16_t ble_rx_message_queue_length = 100;          // Bluetooth Low Energy Server RX
+};
+//*************************************************           INTERRUPTS           **************************************************/
 
+//*************************************************       TASKS DECLARATION        **************************************************/
+
+//*********************************************************       APP       *********************************************************/
+class BottleBirdApp
+{
+
+public:
+    DeviceSettings device_settings;
+
+    ApplicationRTOS_Objects rtos;
+    ESP_ERROR setupRTOS(); // Defined in "tasks/rtos.h"
+
+    //* App begin
     void begin();
-
-private:
-    ESP_ERROR setupRTOS();
 };
 
-extern BottleBirdApp app;
+extern BottleBirdApp app; // This is the main app. Initiated in "main.cpp"
+
+// End.
