@@ -48,20 +48,15 @@ extern SPIFFS_Memory spiffsMemory;
 class Application
 {
 public:
-    //* Settings
     ApplicationSettings settings;
 
-    //* RTOS
     ApplicationRTOS_Objects rtos;
+    ESP_ERROR setupRTOS(); // Defined in "tasks/rtos.h"
 
-    //* App only has 1 method
+    //* App begin
     void begin();
-
-    ESP_ERROR setupRTOS();
-
-private:
 };
 
-extern Application app;
+extern Application app; // This is your main app. Initiate in "main.cpp"
 
 // End.
