@@ -2,7 +2,7 @@
 * Company: ANZE Suspension
 * File Name: main.cpp
 * Project: ESP32 System on Module
-* Version: 1.0
+* Version: 1.1
 * Compartible Hardware: REV1.0
 * Date Created: October 9, 2021
 */
