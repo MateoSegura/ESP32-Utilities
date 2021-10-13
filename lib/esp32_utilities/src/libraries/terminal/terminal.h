@@ -143,9 +143,6 @@ private:
 
     // * Create nice process timestamp.
     String createProcessTimeStamp(unsigned long event_time);
-
-    // * Create nice system timestamp.
-    String createSystemTime();
 };
 
 // End.

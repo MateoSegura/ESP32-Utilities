@@ -40,7 +40,7 @@ void refreshLED(void *parameters)
 
         if (breath_in)
         {
-            brightness = brightness + 1;
+            brightness = brightness + 4;
 
             if (brightness == maximum_brightness)
                 breath_in = false;
@@ -48,7 +48,7 @@ void refreshLED(void *parameters)
 
         if (!breath_in)
         {
-            brightness = brightness - 1;
+            brightness = brightness - 4;
 
             if (brightness == minimum_brightness)
                 breath_in = true;

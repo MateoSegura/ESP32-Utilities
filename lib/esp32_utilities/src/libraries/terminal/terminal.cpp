@@ -50,11 +50,6 @@ void Terminal::printMessage(TerminalMessage debug_message)
             break;
         }
 
-        if (system_time_enabled)
-        {
-            //temp_message += createSystemTime();
-        }
-
         temp_message += createTimeStamp(debug_message.time);
 
         temp_message += createProcessTimeStamp(debug_message.process_time);
@@ -89,12 +84,6 @@ void Terminal::println(String message)
 }
 
 //*********************************************       PRIVATE FUNCTIONS DEFINTION       ********************************************/
-String Terminal::createSystemTime()
-{
-    String temp_string;
-    temp_string = system_time->toString();
-    return temp_string;
-}
 
 String Terminal::createTimeStamp(unsigned long event_time)
 {
@@ -103,12 +92,20 @@ String Terminal::createTimeStamp(unsigned long event_time)
 
     if (system_time_enabled)
     {
+        // // -- Create time string
+        // sprintf(system_time_buffer,
+        //         "%04d-%02d-%02d - %02d:%02d:%02d.%3d", // 25 character String
+        //         system_time->year,
+        //         system_time->month,
+        //         system_time->day,
+        //         system_time->hours,
+        //         system_time->minutes,
+        //         system_time->seconds,
+        //         system_time->milliseconds);
+
         // -- Create time string
         sprintf(system_time_buffer,
-                "%04d-%02d-%02d - %02d:%02d:%02d.%3d", // 25 character String
-                system_time->year,
-                system_time->month,
-                system_time->day,
+                "%02d:%02d:%02d.%3d", // 25 character String
                 system_time->hours,
                 system_time->minutes,
                 system_time->seconds,
