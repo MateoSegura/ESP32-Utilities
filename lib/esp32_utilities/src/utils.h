@@ -47,4 +47,23 @@ public:
     uint8_t minutes;
     uint8_t seconds;
     uint16_t milliseconds;
+
+    String toString(bool date_enabled = false)
+    {
+        String temp_string;
+
+        if (date_enabled)
+        {
+            temp_string += year;
+            temp_string += month;
+            temp_string += day;
+        }
+
+        temp_string += hours;
+        temp_string += minutes;
+        temp_string += seconds;
+        temp_string += milliseconds;
+
+        return temp_string;
+    }
 };

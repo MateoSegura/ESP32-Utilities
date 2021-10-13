@@ -17,6 +17,9 @@
 #include "tasks/pairing/device_pairing.h"
 #include "tasks/bluetooth_server/ble_server.h"
 #include "tasks/led_strip/led_strip.h"
+#include "tasks/main_app/main_app.h"
+#include "tasks/time_keeper/time_keeper.h"
+
 //*****************************************************       DATA TYPES        *****************************************************/
 
 //*****************************************************         OBJECTS         *****************************************************/
@@ -26,6 +29,8 @@ Terminal terminal;
 SystemOnChip esp;
 BluetoothLowEnergyServer bleServer;
 SPIFFS_Memory spiffsMemory;
+RealTimeClock rtc;
+
 Adafruit_NeoPixel led_strip(NUMPIXELS, LED_STRIP_PIN, NEO_GRB + NEO_KHZ800);
 
 //*********************************************************       APP       *********************************************************/
@@ -79,6 +84,14 @@ void BottleBirdApp::begin()
                             NULL,
                             1);
 
+    xTaskCreatePinnedToCore(setupTimeKeeper,
+                            "Time Keeper",
+                            10000,
+                            NULL,
+                            22,
+                            NULL,
+                            1);
+
     xTaskCreatePinnedToCore(setupSPIFFS,
                             "Deep Sleep Setup",
                             30000,
@@ -95,11 +108,19 @@ void BottleBirdApp::begin()
                             NULL,
                             0);
 
+    xTaskCreatePinnedToCore(startMainApp,
+                            "Main app",
+                            10000,
+                            NULL,
+                            21,
+                            NULL,
+                            1);
+
     xTaskCreatePinnedToCore(bleServerTask,
                             "BLE server Task",
                             10000,
                             NULL,
-                            22,
+                            21,
                             NULL,
                             0);
 

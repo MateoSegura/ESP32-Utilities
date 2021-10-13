@@ -1,6 +1,6 @@
 #include "led_strip.h"
 
-//TODO: How to start custom blinking sessions after 
+//TODO: How to start custom blinking sessions after
 void breath();
 void refreshLED(void *parameters);
 
@@ -40,7 +40,7 @@ void refreshLED(void *parameters)
 
         if (breath_in)
         {
-            brightness = brightness + 5;
+            brightness = brightness + 1;
 
             if (brightness == maximum_brightness)
                 breath_in = false;
@@ -48,7 +48,7 @@ void refreshLED(void *parameters)
 
         if (!breath_in)
         {
-            brightness = brightness - 5;
+            brightness = brightness - 1;
 
             if (brightness == minimum_brightness)
                 breath_in = true;

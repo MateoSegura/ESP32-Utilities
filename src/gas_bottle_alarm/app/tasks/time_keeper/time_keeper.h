@@ -2,4 +2,4 @@
 
 #include "gas_bottle_alarm/app/app.h"
 
-void setupSPIFFS(void* parameters);
+void setupTimeKeeper(void *parameters);

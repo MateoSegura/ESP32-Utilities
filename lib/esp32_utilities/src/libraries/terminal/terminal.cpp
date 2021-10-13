@@ -14,10 +14,10 @@
 #include "terminal.h"
 
 //*****************************************       TERMINAL CLASS FUNCTIONS DEFINTION       ******************************************/
-void Terminal::begin(HardwareSerial *app_uart_port, bool time_stamp_micros_enabled)
+void Terminal::begin(HardwareSerial *app_uart_port, bool time_stamp_micros_enabled, bool enable_system_time)
 {
     terminal_enabled = true;
-    system_time_enabled = false;
+    system_time_enabled = enable_system_time;
     terminal_uart_port = app_uart_port;
     time_stamp_micros = time_stamp_micros_enabled;
 }
@@ -48,6 +48,11 @@ void Terminal::printMessage(TerminalMessage debug_message)
         case ERROR:
             temp_message_type = "ERR";
             break;
+        }
+
+        if (system_time_enabled)
+        {
+            //temp_message += createSystemTime();
         }
 
         temp_message += createTimeStamp(debug_message.time);
@@ -84,6 +89,13 @@ void Terminal::println(String message)
 }
 
 //*********************************************       PRIVATE FUNCTIONS DEFINTION       ********************************************/
+String Terminal::createSystemTime()
+{
+    String temp_string;
+    temp_string = system_time->toString();
+    return temp_string;
+}
+
 String Terminal::createTimeStamp(unsigned long event_time)
 {
     String temp_string;
