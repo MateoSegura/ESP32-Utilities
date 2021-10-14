@@ -12,94 +12,94 @@ struct ESP32_FILE
 
 ESP_ERROR initializeSPIFFS();
 ESP_ERROR readSettingsFile();
-ESP_ERROR SaveSettingsOnFirstBoot();
+ESP_ERROR saveSettings();
 ESP_ERROR calibrateADC();
 
 void setupSPIFFS(void *parameters)
 {
     long initial_time = micros();
-    TerminalMessage spiffs_debug_message;
     const uint8_t debug_message_queue_ticks = 1;
 
     // * 1. Initialize Memory
     ESP_ERROR initialize_spiffs = initializeSPIFFS();
 
+    TerminalMessage init_spiffs_debug_message;
+
     if (initialize_spiffs.on_error)
     {
-        spiffs_debug_message = TerminalMessage("SPIFFS was not initialized", // Message
-                                               "FFS", ERROR, micros(),       // System, message type, timestamp
-                                               micros() - initial_time);     // Process Time
+        init_spiffs_debug_message = TerminalMessage("SPIFFS was not initialized", // Message
+                                                    "FFS", ERROR, micros(),       // System, message type, timestamp
+                                                    micros() - initial_time);     // Process Time
 
-        addDebugMessageToQueue(&spiffs_debug_message, debug_message_queue_ticks);
+        addDebugMessageToQueue(&init_spiffs_debug_message, debug_message_queue_ticks);
         vTaskDelete(NULL);
+    }
+    else
+    {
+        init_spiffs_debug_message = TerminalMessage("SPIFFS initialized",     // Message
+                                                    "FFS", ERROR, micros(),   // System, message type, timestamp
+                                                    micros() - initial_time); // Process Time
+
+        addDebugMessageToQueue(&init_spiffs_debug_message, debug_message_queue_ticks);
     }
 
     // * 2. Read settings file
     ESP_ERROR read_settings = readSettingsFile();
+
+    TerminalMessage read_file_debug_message;
+
     if (read_settings.on_error)
     {
-        spiffs_debug_message = TerminalMessage(read_settings.debug_message, // Message
-                                               "FFS", ERROR, micros(),      // System, message type, timestamp
-                                               micros() - initial_time);    // Process Time
-        addDebugMessageToQueue(&spiffs_debug_message, debug_message_queue_ticks);
+        read_file_debug_message = TerminalMessage(read_settings.debug_message, // Message
+                                                  "FFS", ERROR, micros(),      // System, message type, timestamp
+                                                  micros() - initial_time);    // Process Time
+        addDebugMessageToQueue(&read_file_debug_message, debug_message_queue_ticks);
         vTaskDelete(NULL);
+    }
+    else
+    {
+        read_file_debug_message = TerminalMessage("Settings file read correctly", // Message
+                                                  "FFS", ERROR, micros(),         // System, message type, timestamp
+                                                  micros() - initial_time);       // Process Time
+        addDebugMessageToQueue(&read_file_debug_message, debug_message_queue_ticks);
     }
 
     // * 3. Figure out if it's the first boot
+    TerminalMessage on_first_boot_debug_message;
+
     if (app.device_settings.first_boot)
     {
-        ESP_ERROR write_file_on_first_boot = SaveSettingsOnFirstBoot();
+        app.device_settings.first_boot = false;
+
+        ESP_ERROR write_file_on_first_boot = saveSettings();
 
         if (write_file_on_first_boot.on_error)
         {
-            spiffs_debug_message = TerminalMessage(write_file_on_first_boot.debug_message, // Message
-                                                   "FFS", ERROR, micros(),                 // System, message type, timestamp
-                                                   micros() - initial_time);               // Process Time
+            on_first_boot_debug_message = TerminalMessage(write_file_on_first_boot.debug_message, // Message
+                                                          "FFS", ERROR, micros(),                 // System, message type, timestamp
+                                                          micros() - initial_time);               // Process Time
         }
         else
         {
-            spiffs_debug_message = TerminalMessage("First boot. Device was setup & settings file was re-written", // Message
-                                                   "FFS", ERROR, micros(),                                        // System, message type, timestamp
-                                                   micros() - initial_time);                                      // Process Time
+            on_first_boot_debug_message = TerminalMessage("First boot. Device was setup & settings file was re-written", // Message
+                                                          "FFS", ERROR, micros(),                                        // System, message type, timestamp
+                                                          micros() - initial_time);                                      // Process Time
         }
 
-        addDebugMessageToQueue(&spiffs_debug_message, debug_message_queue_ticks);
+        addDebugMessageToQueue(&on_first_boot_debug_message, debug_message_queue_ticks);
 
         //TODO: 3.2. Calibrate ADC & store in RTC memory
-        // initial_time = micros();
-
-        // calibrateADC();
-
-        // spiffs_debug_message = TerminalMessage("Created ADC correction curves", // Message
-        //                                        "FFS", ERROR, micros(),          // System, message type, timestamp
-        //                                        micros() - initial_time);        // Process Time
     }
 
     // * 4. Figure out if device has been paired yet
     if (app.device_settings.device_is_setup)
     {
-        spiffs_debug_message = TerminalMessage("Device is setup. Starting main", // Message
-                                               "FFS", INFO, micros(),            // System, message type, timestamp
-                                               micros() - initial_time);         // Process Time
-
-        addDebugMessageToQueue(&spiffs_debug_message, debug_message_queue_ticks);
-        vTaskDelay(10 / portTICK_PERIOD_MS);
         xSemaphoreGive(app.rtos.start_main); // * Start Main App if paired
-        vTaskDelete(NULL);
     }
     else
     {
-        spiffs_debug_message = TerminalMessage("Device is not setup. Starting initial pairing: ", // Message
-                                               "FFS", INFO, micros(),                             // System, message type, timestamp
-                                               micros() - initial_time);                          // Process Time
-
-        addDebugMessageToQueue(&spiffs_debug_message, debug_message_queue_ticks);
-        vTaskDelay(10 / portTICK_PERIOD_MS);
         xSemaphoreGive(app.rtos.start_pairing); // * Start Pairing
-        vTaskDelete(NULL);
     }
-
-    // In theory this should never happen, and you should know why!. =)
 
     vTaskDelete(NULL);
 }
@@ -148,11 +148,9 @@ ESP_ERROR readSettingsFile()
     return err;
 }
 
-ESP_ERROR SaveSettingsOnFirstBoot()
+ESP_ERROR saveSettings()
 {
     ESP_ERROR err;
-
-    app.device_settings.first_boot = false;
 
     StaticJsonDocument<SETTINGS_FILE_SIZE_BYTES> new_settings_json;
 

@@ -1,5 +1,5 @@
 {
-    "first_boot": false,
+    "first_boot": true,
     "device_is_setup": false,
     "wifi_ssid": "FBISurveillanceVan",
     "wifi_password": "500Bucks",

@@ -6,7 +6,8 @@ void setupTerminal(void *parameters)
     TerminalMessage debug_message;
     String file_content;
 
-    terminal.begin(&esp.uart0);
+    terminal.begin(&esp.uart0, false, true);
+    terminal.setTimeKeeper(&app.system_time);
 
     while (1)
     {

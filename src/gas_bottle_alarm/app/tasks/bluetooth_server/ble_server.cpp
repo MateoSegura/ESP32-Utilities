@@ -75,6 +75,8 @@ class MyCallbacks : public BLECharacteristicCallbacks
 
             ble_rx_message = TerminalMessage(incoming_bluetooth_message, "BLE", INFO, micros());
             addDebugMessageToQueue(&ble_rx_message);
+
+            addBluetoothRXMessageToQueue(&instruction, 0);
         }
     }
 

@@ -100,15 +100,15 @@ class Terminal
 {
 public:
     // * Initialize terminal
-    void begin(HardwareSerial *app_uart_port = &Serial, //Set to UART 0 by default
-               bool time_stamp_micros_enabled = false); //Set to milliseconds by default
+    void begin(HardwareSerial *app_uart_port, //Set to UART 0 by default
+               bool time_stamp_micros_enabled = false,
+               bool enable_system_time = false); //Set to milliseconds by default
 
     // * End
     void end();
 
     void setTimeKeeper(DateTime *time)
     {
-        time_stamp_system_time = true;
         system_time = time;
     }
 
@@ -132,7 +132,6 @@ private:
 
     // * Initialization Variables
     bool time_stamp_micros;
-    bool time_stamp_system_time;
 
     // * Buffers for time stamp stringss
     char time_stamp_buffer[14];

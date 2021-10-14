@@ -39,7 +39,17 @@ public:
 class DateTime
 {
 public:
-    DateTime() {}
+    DateTime()
+    {
+        year = 0;
+        month = 0;
+        day = 0;
+        hours = 0;
+        minutes = 0;
+        seconds = 0;
+        milliseconds = 0;
+    }
+
     uint16_t year;
     uint8_t month;
     uint8_t day;
@@ -47,4 +57,52 @@ public:
     uint8_t minutes;
     uint8_t seconds;
     uint16_t milliseconds;
+
+    String toString(bool date_enabled = false)
+    {
+        String temp_string;
+
+        if (date_enabled)
+        {
+            temp_string += year;
+            temp_string += month;
+            temp_string += day;
+        }
+
+        temp_string += hours;
+        temp_string += minutes;
+        temp_string += seconds;
+        temp_string += milliseconds;
+
+        return temp_string;
+    }
+
+    void updateMilliseconds()
+    {
+        milliseconds++;
+
+        if (milliseconds == 999)
+        {
+            milliseconds = 0;
+            seconds++;
+
+            if (seconds == 59)
+            {
+                seconds = 0;
+                minutes++;
+
+                if (minutes == 59)
+                {
+                    minutes = 0;
+                    hours++;
+
+                    if (hours == 24)
+                    {
+                        hours = 0;
+                        day++;
+                    }
+                }
+            }
+        }
+    }
 };

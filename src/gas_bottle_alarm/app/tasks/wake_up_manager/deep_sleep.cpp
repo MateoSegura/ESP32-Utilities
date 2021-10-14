@@ -45,6 +45,8 @@ void setupDeepSleepManager(void *parameters)
                                           "SLE", INFO, micros(),    // System, message type, timestamp
                                           micros() - initial_time); // Process Time
 
+    addDebugMessageToQueue(&sleep_debug_message, debug_message_queue_ticks);
+
     //* 2. Measure if battery voltage is above threshold
     uint16_t raw_battery_adc_value = analogRead(VBAT_3V3_PIN);
     double battery_voltage = 2 * ((raw_battery_adc_value * 3.3) / 4095); //1/2 voltage divier
@@ -52,6 +54,8 @@ void setupDeepSleepManager(void *parameters)
     TerminalMessage battery_voltage_message = TerminalMessage(
         "Battery voltage -> " + String(battery_voltage) + " V. Threshold is -> " + String((double)MINIMUM_BAT_VOLTAGE_FOR_BOOT_mV / 1000),
         "SLE", INFO, micros());
+
+    addDebugMessageToQueue(&battery_voltage_message);
 
     //* 3. Go back to sleep if voltage too low. Device will only wake up again from user button
     if ((battery_voltage * 1000) <= MINIMUM_BAT_VOLTAGE_FOR_BOOT_mV)
@@ -69,10 +73,6 @@ void setupDeepSleepManager(void *parameters)
 
         esp_deep_sleep_start();
     }
-
-    //* If battery voltage above threshold
-    addDebugMessageToQueue(&battery_voltage_message);
-    addDebugMessageToQueue(&sleep_debug_message, debug_message_queue_ticks);
 
     vTaskDelete(NULL);
 }

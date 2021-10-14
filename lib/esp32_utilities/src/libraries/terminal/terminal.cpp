@@ -14,10 +14,10 @@
 #include "terminal.h"
 
 //*****************************************       TERMINAL CLASS FUNCTIONS DEFINTION       ******************************************/
-void Terminal::begin(HardwareSerial *app_uart_port, bool time_stamp_micros_enabled)
+void Terminal::begin(HardwareSerial *app_uart_port, bool time_stamp_micros_enabled, bool enable_system_time)
 {
     terminal_enabled = true;
-    system_time_enabled = false;
+    system_time_enabled = enable_system_time;
     terminal_uart_port = app_uart_port;
     time_stamp_micros = time_stamp_micros_enabled;
 }
@@ -84,6 +84,7 @@ void Terminal::println(String message)
 }
 
 //*********************************************       PRIVATE FUNCTIONS DEFINTION       ********************************************/
+
 String Terminal::createTimeStamp(unsigned long event_time)
 {
     String temp_string;
@@ -91,12 +92,20 @@ String Terminal::createTimeStamp(unsigned long event_time)
 
     if (system_time_enabled)
     {
+        // // -- Create time string
+        // sprintf(system_time_buffer,
+        //         "%04d-%02d-%02d - %02d:%02d:%02d.%3d", // 25 character String
+        //         system_time->year,
+        //         system_time->month,
+        //         system_time->day,
+        //         system_time->hours,
+        //         system_time->minutes,
+        //         system_time->seconds,
+        //         system_time->milliseconds);
+
         // -- Create time string
         sprintf(system_time_buffer,
-                "%04d-%02d-%02d - %02d:%02d:%02d.%3d", // 25 character String
-                system_time->year,
-                system_time->month,
-                system_time->day,
+                "%02d:%02d:%02d.%3d", // 25 character String
                 system_time->hours,
                 system_time->minutes,
                 system_time->seconds,

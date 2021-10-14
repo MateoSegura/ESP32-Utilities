@@ -27,6 +27,7 @@ extern Terminal terminal;
 extern BluetoothLowEnergyServer bleServer;
 extern SPIFFS_Memory spiffsMemory;
 extern Adafruit_NeoPixel led_strip;
+extern RealTimeClock rtc;
 
 //*****************************************************       DATA TYPES        *****************************************************/
 
@@ -36,7 +37,7 @@ extern Adafruit_NeoPixel led_strip;
 #define MINIMUM_BAT_VOLTAGE_FOR_BOOT_mV 3700
 
 #define NUMPIXELS 12
-#define LED_BLINKING_PERIOD_mS 30
+#define LED_BLINKING_PERIOD_mS 15
 
 class DeviceSettings
 {
@@ -122,6 +123,7 @@ class BottleBirdApp
 {
 
 public:
+    DateTime system_time;
     DeviceSettings device_settings;
 
     ApplicationRTOS_Objects rtos;

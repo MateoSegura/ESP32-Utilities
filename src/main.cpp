@@ -1,10 +1,6 @@
-/*
-* File Name: main.cpp
-* Project: ESP32 System on Module
-* Version: 1.0
-* Compartible Hardware: REV1.0
-*/
+#include <gas_bottle_alarm/app/app.h>
 
+<<<<<<< HEAD
 #include <Arduino.h>
 #include <esp32_utilities.h>
 #include <MPU9250.h>
@@ -51,3 +47,13 @@ void setup()
 void loop()
 {
 }
+=======
+BottleBirdApp app;
+
+void setup()
+{
+  app.begin();
+}
+
+void loop() {}
+>>>>>>> ff42a5829cd85f1113de9e1bec61842d2a9e2b1e
