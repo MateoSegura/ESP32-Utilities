@@ -17,7 +17,8 @@
 #define VSPI_FREQUENCY 200000 // 10 MHz.
 
 SystemOnChip esp;
-AD7689 ad7689(AD7689_CS_PIN, &esp.vspi, 8);
+Terminal terminal;
+AD7689 ad7689;
 
 void setup()
 {
@@ -25,31 +26,28 @@ void setup()
   //* 1. initialize terminal
   esp.uart0.begin(115200);
 
+  terminal.begin(&esp.uart0);
+
   //* Begin SPI port
   esp.vspi.begin(VSPI_SCK_PIN, VSPI_MISO_PIN, VSPI_MOSI_PIN);
 
   // //* Begin ADC
-  // ESP_ERROR initialize_adc = ad7689.begin(AD7689_CS_PIN, esp.vspi, VSPI_FREQUENCY);
+  ESP_ERROR initialize_adc = ad7689.begin(AD7689_CS_PIN, esp.vspi, VSPI_FREQUENCY);
 
-  // if (initialize_adc.on_error) // Catch error
-  // {
-  //   esp.uart0.println(initialize_adc.debug_message);
-  //   while (1)
-  //     ; // Endless loop if not initialized correctly
-  // }
-
-  ad7689.acquireChannel(0);
-  bool adc_self_test = ad7689.selftest();
-
-  if (adc_self_test == false)
+  if (initialize_adc.on_error) // Catch error
   {
-    esp.uart0.println("Could not init ADC");
+    esp.uart0.println(initialize_adc.debug_message);
+    while (1)
+      ; // Endless loop if not initialized correctly
   }
+
+  terminal.printMessage(TerminalMessage("Hello world", "ABC0", INFO, micros()));
+
+  //ad7689.acquireChannel(0);
 
   esp.uart0.println("ADC has been initialized");
 }
 
 void loop()
 {
-  Serial.println(ad7689.acquireChannel(0));
 }
