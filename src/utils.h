@@ -1,7 +1,6 @@
 #pragma once
 
 /* 
-* Company: ANZE Suspension
 * File Name: utils.h
 * Project: ESP32 Utilities
 * Version: 1.0
