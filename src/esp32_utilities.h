@@ -1,7 +1,6 @@
 #pragma once
 
 /* 
-* Company: ANZE Suspension
 * File Name: Terminal.h
 * Project: ESP32 Utilities Terminal
 * Version: 1.0
