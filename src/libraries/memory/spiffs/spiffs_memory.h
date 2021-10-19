@@ -27,8 +27,7 @@
 
 //*****************************************************        LIBRARIES        *****************************************************/
 #include <Arduino.h>
-#include "FS.h"
-#include "SPIFFS.h"
+#include <SPIFFS.h>
 #include <utils.h>
 #include <ArduinoJson.h>
 

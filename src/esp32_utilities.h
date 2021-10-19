@@ -53,7 +53,7 @@
 //TODO: Add library documentation: https://learn.adafruit.com/the-well-automated-arduino-library/doxygen-tips
 
 // * Memory
-//#include "libraries/memory/spiffs/spiffs_memory.h"
+#include "libraries/memory/spiffs/spiffs_memory.h"
 //TODO: Creat SPIFFS if not initialized
 
 #include "libraries/memory/emmc/emmc_memory.h"
