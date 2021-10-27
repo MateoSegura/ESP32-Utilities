@@ -1,14 +1,14 @@
-/* 
-* Company: ANZE Suspension
-* File Name: ESP32UtilitiesEMMC.cpp
-* Project: ESP32 Utilities EMMC
-* Version: 1.0
-* Compartible Hardware: 
-* Date Created: September 8, 2021
-* Last Modified: September 9, 2021
-* 
-* Copyright 2021, Mateo Segura, All rights reserved.
-*/
+/*
+ * Company: ANZE Suspension
+ * File Name: ESP32UtilitiesEMMC.cpp
+ * Project: ESP32 Utilities EMMC
+ * Version: 1.0
+ * Compartible Hardware:
+ * Date Created: September 8, 2021
+ * Last Modified: September 9, 2021
+ *
+ * Copyright 2021, Mateo Segura, All rights reserved.
+ */
 
 //*****************************************************       HEADER FILE       *****************************************************/
 #include "emmc_memory.h"
@@ -35,7 +35,7 @@ ESP_ERROR EMMC_Memory::begin(uint8_t enable_pin,
 
         vTaskDelay(25 / portTICK_PERIOD_MS); // This is required of pin will read HIGH. Don't know why, not too important
 
-        if (digitalRead(emmc_detect_pin) == LOW)
+        if (digitalRead(emmc_detect_pin) == LOW || emmc_detect_pin == -1)
         {
             emmc_detected = true;
             emmc_bus_width = bus_width;
@@ -50,7 +50,7 @@ ESP_ERROR EMMC_Memory::begin(uint8_t enable_pin,
             switch (connection_mode)
             {
             case eMMC_MODE:
-            { //Set up pull up resistors
+            { // Set up pull up resistors
                 pinMode(esp_emmc_data0, INPUT_PULLUP);
                 pinMode(esp32_emmc_clk, INPUT_PULLUP);
                 pinMode(esp32_emmc_cmd, INPUT_PULLUP);
@@ -65,7 +65,7 @@ ESP_ERROR EMMC_Memory::begin(uint8_t enable_pin,
                     pinMode(esp_emmc_dat3, INPUT_PULLUP);
                 }
 
-                //Attempt to initialize
+                // Attempt to initialize
                 if (!SD_MMC.begin("/sdcard", mode_1_bit))
                 {
                     err.on_error = true;
@@ -84,7 +84,7 @@ ESP_ERROR EMMC_Memory::begin(uint8_t enable_pin,
 
             break;
             case SPI_MODE:
-            { //TODO: Implement SPI eMMC mode'
+            { // TODO: Implement SPI eMMC mode'
                 err.on_error = true;
                 err.debug_message = "SPI Mode hasn't been implemented yet";
             }
@@ -116,7 +116,7 @@ ESP_ERROR EMMC_Memory::begin(uint8_t enable_pin,
 // -- Directory Operations
 ESP_ERROR EMMC_Memory::listDirectory(const char *dirname, uint8_t levels)
 {
-    //TODO: Implement directory list functionality
+    // TODO: Implement directory list functionality
     ESP_ERROR err;
     err.on_error = true;
     err.debug_message = "List directory functionality has not been implemented yet";
@@ -264,7 +264,7 @@ ESP_ERROR EMMC_Memory::readFile(const char *path)
         // If filed opened correctly
         else
         {
-            //TODO: Implement serial burst read
+            // TODO: Implement serial burst read
             err.on_error = true;
             err.debug_message = "Serial file download has not been implemented yet";
         }
@@ -307,7 +307,7 @@ ESP_ERROR EMMC_Memory::writeFile(const char *path, const uint8_t *message)
                 temp_message += "Appending to file \"";
                 temp_message += path;
                 temp_message += "\" was succesful";
-                //file.close();
+                // file.close();
             }
             else
             {
@@ -335,7 +335,7 @@ ESP_ERROR EMMC_Memory::appendFile(const char *path, const uint8_t *message)
 
     if (emmc_initialized)
     {
-        //File file = this->file_system->open(path, FILE_APPEND);
+        // File file = this->file_system->open(path, FILE_APPEND);
 
         // Error opening file
         if (!myFile)
