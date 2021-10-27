@@ -28,14 +28,10 @@
 // Mateo :)
 
 //******************** SETTINGS
-// Set the baudrate of the terminal uart port
-#define UART0_BAUD_RATE 115200
 
-// Set to true to enabled microsecond time stamp in terminal messages
-#define MICROS_TIMESTAMP_ENABLED false
-
-// Set to true if using a real time clock. Refer to "rtc_example.cpp" for more
-#define SYSTEM_TIME_ENABLED false
+#define UART0_BAUD_RATE 115200         // Set the baudrate of the terminal uart port
+#define MICROS_TIMESTAMP_ENABLED false // Set to true to enabled microsecond time stamp in terminal messages
+#define SYSTEM_TIME_ENABLED false      // Set to true if using a real time clock. Refer to "rtc_example.cpp" for more
 
 //******************** UTILITIES OBJECTS
 SystemOnChip esp;
