@@ -1,15 +1,15 @@
 #pragma once
 
-/* 
-* File Name: utils.h2
-* Project: ESP32 Utilities
-* Version: 1.0
-* Compartible Hardware: 
-* Date Created: September 8, 2021
-* Last Modified: September 9, 2021
-*
-* Copyright 2021, Mateo Segura, All rights reserved.
-*/
+/*
+ * File Name: utils.h2
+ * Project: ESP32 Utilities
+ * Version: 1.0
+ * Compartible Hardware:
+ * Date Created: September 8, 2021
+ * Last Modified: September 9, 2021
+ *
+ * Copyright 2021, Mateo Segura, All rights reserved.
+ */
 
 //*****************************************************        LIBRARIES        *****************************************************/
 #include <Arduino.h>
@@ -64,13 +64,19 @@ public:
         if (date_enabled)
         {
             temp_string += year;
+            temp_string += "/";
             temp_string += month;
+            temp_string += "/";
             temp_string += day;
+            temp_string += " - ";
         }
 
         temp_string += hours;
+        temp_string += ":";
         temp_string += minutes;
+        temp_string += ":";
         temp_string += seconds;
+        temp_string += ".";
         temp_string += milliseconds;
 
         return temp_string;
