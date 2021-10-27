@@ -1,16 +1,11 @@
 #pragma once
 
-/* 
-* Company: ANZE Suspension
-* File Name: Terminal.h
-* Project: ESP32 Utilities Terminal
-* Version: 1.0
-* Compartible Hardware: 
-* Date Created: September 8, 2021
-* Last Modified: September 9, 2021
-*
-* Copyright 2021, Mateo Segura, All rights reserved.
-*/
+/*
+ * File Name: Terminal.h
+ * Project: ESP32 Utilities Libraries
+ *
+ * Copyright 2021, Mateo Segura, All rights reserved.
+ */
 
 //*********************************************************     READ ME    **********************************************************/
 
@@ -100,9 +95,9 @@ class Terminal
 {
 public:
     // * Initialize terminal
-    void begin(HardwareSerial *app_uart_port, //Set to UART 0 by default
+    void begin(HardwareSerial *app_uart_port, // Set to UART 0 by default
                bool time_stamp_micros_enabled = false,
-               bool enable_system_time = false); //Set to milliseconds by default
+               bool enable_system_time = false); // Set to milliseconds by default
 
     // * End
     void end();
