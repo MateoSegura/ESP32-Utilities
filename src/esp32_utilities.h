@@ -36,7 +36,7 @@
 #include "libraries/soc/soc.h"
 
 // * Analog to Digital Converters
-#include "libraries/adc/chips/ad7689/ad7689.h"
+#include "libraries/adc/ad7689/ad7689.h"
 
 // TODO: Clean up & convert library to new format
 

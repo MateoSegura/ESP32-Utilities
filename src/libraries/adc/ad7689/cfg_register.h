@@ -41,3 +41,15 @@
 #define REF (3)
 #define SEQ (1)
 #define RB (0)
+
+#define TEMP_REF (4.096) // reference voltage to be used for temperature measurement, either 2.5V or 4.096V
+#define BASE_TEMP (25)
+#define TEMP_BASE_VOLTAGE (0.283)
+#define TEMP_RICO (0.001)
+#define INTERNAL_25 (2.5)
+#define INTERNAL_4096 (4.096)
+#define TOTAL_CHANNELS (8)
+#define TOTAL_STEPS (65536)
+#define TCONV (4)
+#define TACQ (2)
+#define STARTUP_DELAY (100)
