@@ -95,7 +95,7 @@ class Terminal
 {
 public:
     // * Initialize terminal
-    void begin(HardwareSerial *app_uart_port, // Set to UART 0 by default
+    void begin(HardwareSerial &app_uart_port, // Set to UART 0 by default
                bool time_stamp_micros_enabled = false,
                bool enable_system_time = false); // Set to milliseconds by default
 

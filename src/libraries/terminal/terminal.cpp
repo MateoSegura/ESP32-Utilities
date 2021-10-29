@@ -1,24 +1,24 @@
-/* 
-* Company: ANZE Suspension
-* File Name: Terminal.cpp
-* Project: ESP32 Utilities
-* Version: 1.0
-* Compartible Hardware: 
-* Date Created: September 8, 2021
-* Last Modified: September 9, 2021
-*
-* Copyright 2021, Mateo Segura, All rights reserved.
-*/
+/*
+ * Company: ANZE Suspension
+ * File Name: Terminal.cpp
+ * Project: ESP32 Utilities
+ * Version: 1.0
+ * Compartible Hardware:
+ * Date Created: September 8, 2021
+ * Last Modified: September 9, 2021
+ *
+ * Copyright 2021, Mateo Segura, All rights reserved.
+ */
 
 //*****************************************************       HEADER FILE       *****************************************************/
 #include "terminal.h"
 
 //*****************************************       TERMINAL CLASS FUNCTIONS DEFINTION       ******************************************/
-void Terminal::begin(HardwareSerial *app_uart_port, bool time_stamp_micros_enabled, bool enable_system_time)
+void Terminal::begin(HardwareSerial &app_uart_port, bool time_stamp_micros_enabled, bool enable_system_time)
 {
     terminal_enabled = true;
     system_time_enabled = enable_system_time;
-    terminal_uart_port = app_uart_port;
+    *terminal_uart_port = app_uart_port;
     time_stamp_micros = time_stamp_micros_enabled;
 }
 
