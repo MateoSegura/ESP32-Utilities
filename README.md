@@ -1,5 +1,5 @@
 # ESP32-Utilities
-These libraries are a collection of useful software needed to create IoT embedded applications for the ESP32 family of microcontrollers using the Arduino framework.
+A collection of libraries used to create IoT embedded applications with the ESP32 family of microcontrollers and the Arduino framework.
 
 A list of the available libraries is given below:
 
