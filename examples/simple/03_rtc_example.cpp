@@ -101,8 +101,7 @@ void setup()
 
     // 7. Set a Hardware Timer with 1 ms period for accurate timing. Usual drift is about 1 second/5 hours
     //
-    //    Refer to "soc_example.cpp" for information on how to utilize the hardware timers, and attach an interrupt
-    //    to execute when timer expires
+    //    Refer to "soc_example.cpp" for information on how to utilize the hardware timers
     //
 
     esp.timer0.setup();

@@ -32,12 +32,11 @@
 // between r/w speeds, and number of pins required. You also don't have to care about the problem
 // that occurs when you try to do an Over The Air Update while connected in 4-bit emmc mode.
 //
-// TODO: Create a small article about the above
-//
 // Mateo :)
 
-//******************** TEST CONFIGURATION
+//******************** R/W TESTS CONFIGURATION
 #define BLOCKS_TO_WRITE 1000 // Blocks of 512 bytes
+#define BLOCKS_TO_READ 1000  // Blocks of 512 bytes
 
 //******************** SETTINGS
 
@@ -61,7 +60,7 @@ EMMC_Memory emmc;
 //********************  METHODS
 void handleCardDetectPinChange();
 void runWriteTest();
-void runReadTest();
+void runReadTest(); // TODO: Implement read test
 
 //********************  SETUP
 void setup()
@@ -71,7 +70,7 @@ void setup()
 
     esp.uart0.println("\n\n"); // The esp.uart0 object is the "Serial" object from Arduino. Refer to "soc_example.cpp" for more
     esp.uart0.println("************************************************************************************************************");
-    esp.uart0.println("*                                      Real Time Clock Example                                             *");
+    esp.uart0.println("*                                            eMMC Example                                                  *");
     esp.uart0.println("************************************************************************************************************");
     esp.uart0.println("\n\n");
 

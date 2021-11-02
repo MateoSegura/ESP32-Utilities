@@ -104,7 +104,7 @@ void setup()
     esp.uart0.println("************************************************************************************************************");
     esp.uart0.println("\n\n");
 
-    terminal.begin(&esp.uart0, MICROS_TIMESTAMP_ENABLED, SYSTEM_TIME_ENABLED);
+    terminal.begin(esp.uart0, MICROS_TIMESTAMP_ENABLED, SYSTEM_TIME_ENABLED);
 
     //* 2. How to init I2C port
     //    ESP32 has 1 I2C driver, but since the bus has a very low clock frequency, you can implement a

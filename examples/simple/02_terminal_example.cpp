@@ -50,7 +50,7 @@ void setup()
     esp.uart0.println("\n\n");
 
     // 2. Init Terminal
-    terminal.begin(&esp.uart0, MICROS_TIMESTAMP_ENABLED, SYSTEM_TIME_ENABLED);
+    terminal.begin(esp.uart0, MICROS_TIMESTAMP_ENABLED, SYSTEM_TIME_ENABLED);
 }
 
 //********************  LOOP
@@ -111,7 +111,7 @@ void loop()
 
     terminal.printMessage(debug_message); // Just pass the terminal message object to be printed
 
-    // 5. Simulate dummy task 2 (equivalent to some wireless network magic)
+    // 5. Simulate dummy process 2 (equivalent to some wireless networking magic...)
     initial_process_time = micros(); // Get the current time
     for (int i = 0; i < 10; i++)
         delay(20);
