@@ -18,7 +18,7 @@ void Terminal::begin(HardwareSerial &app_uart_port, bool time_stamp_micros_enabl
 {
     terminal_enabled = true;
     system_time_enabled = enable_system_time;
-    *terminal_uart_port = app_uart_port;
+    terminal_uart_port = app_uart_port;
     time_stamp_micros = time_stamp_micros_enabled;
 }
 
@@ -63,7 +63,7 @@ void Terminal::printMessage(TerminalMessage debug_message)
         temp_message += "] - ";
         temp_message += debug_message.body;
 
-        terminal_uart_port->println(temp_message);
+        terminal_uart_port.println(temp_message);
     }
 }
 
@@ -71,7 +71,7 @@ void Terminal::print(String message)
 {
     if (terminal_enabled)
     {
-        terminal_uart_port->print(message);
+        terminal_uart_port.print(message);
     }
 }
 
@@ -79,7 +79,7 @@ void Terminal::println(String message)
 {
     if (terminal_enabled)
     {
-        terminal_uart_port->println(message);
+        terminal_uart_port.println(message);
     }
 }
 

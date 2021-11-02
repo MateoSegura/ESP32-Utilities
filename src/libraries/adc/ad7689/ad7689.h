@@ -89,7 +89,7 @@ protected:
     uint8_t inputConfig; /*!< Input channel configuration. */
     uint8_t refConfig;   /*!< Voltage reference configuration. */
 
-    SPIClass adc_spi_bus;
+    SPIClass *adc_spi_bus;
     SPISettings adc_spi_settings;
     uint8_t adc_cs_pin;
 
@@ -122,8 +122,7 @@ protected:
     float getPosRef(uint8_t refS, float posR);
 
 public:
-
-    ESP_ERROR begin(uint8_t cs_pin, SPIClass &spi_bus, uint64_t spi_bus_clk_frequency);
+    ESP_ERROR begin(uint8_t cs_pin, SPIClass *spi_bus, uint64_t spi_bus_clk_frequency);
     void enableFiltering(bool onOff);
     float acquireChannel(uint8_t channel, uint32_t *timeStamp);
     float acquireChannel(uint8_t channel);

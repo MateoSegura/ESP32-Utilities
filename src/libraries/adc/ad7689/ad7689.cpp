@@ -26,20 +26,24 @@ uint16_t AD7689::shiftTransaction(uint16_t command, bool readback, uint16_t *rb_
     // allow time to sample
     delayMicroseconds(TCONV);
 
-    adc_spi_bus.beginTransaction(adc_spi_settings);
+    digitalWrite(adc_cs_pin, LOW);
 
-    uint16_t data = (adc_spi_bus.transfer(command >> 8) << 8) | adc_spi_bus.transfer(command & 0xFF);
+    // uint16_t data = (adc_spi_bus->transfer(command >> 8) << 8) | adc_spi_bus->transfer(command & 0xFF);
+    uint16_t data = adc_spi_bus->transfer16(command);
 
     // if a readback is requested, the 16 bit frame is extended with another 16 bits to retrieve the value
     if (readback)
     {
         // duplicate previous command
-        uint16_t res = (adc_spi_bus.transfer(command >> 8) << 8) | adc_spi_bus.transfer(command & 0xFF);
+        // uint16_t res = (adc_spi_bus->transfer(command >> 8) << 8) | adc_spi_bus->transfer(command & 0xFF);
+        uint16_t res = adc_spi_bus->transfer16(command);
         if (rb_cmd_ptr)
         {
             *rb_cmd_ptr = res;
         }
     }
+
+    digitalWrite(adc_cs_pin, HIGH);
 
     // delay to allow data acquisition for the next cycle
     delayMicroseconds(TACQ); // minumum 1.2µs
@@ -384,7 +388,7 @@ float AD7689::getPosRef(uint8_t refS, float posR)
  * @return                Instance of the ADC.
  */
 
-ESP_ERROR AD7689::begin(uint8_t cs_pin, SPIClass &spi_bus, uint64_t spi_bus_clk_frequency)
+ESP_ERROR AD7689::begin(uint8_t cs_pin, SPIClass *spi_bus, uint64_t spi_bus_clk_frequency)
 {
     inputCount = 8;
     inputConfig = getInputConfig(UNIPOLAR_MODE, false);
@@ -407,19 +411,30 @@ ESP_ERROR AD7689::begin(uint8_t cs_pin, SPIClass &spi_bus, uint64_t spi_bus_clk_
     adc_spi_bus = spi_bus;
     adc_spi_settings = SPISettings(spi_bus_clk_frequency, MSBFIRST, SPI_MODE0);
 
+    adc_spi_bus->beginTransaction(adc_spi_settings);
+
     // start-up sequence
     // give ADC time to start up
-    delay(STARTUP_DELAY);
+    delay(15);
+    pinMode(adc_cs_pin, OUTPUT);
     digitalWrite(adc_cs_pin, LOW);
     delayMicroseconds(TACQ); // miniumum 10 ns
     digitalWrite(adc_cs_pin, HIGH);
     delayMicroseconds(TCONV); // minimum 3.2 µs
 
+    uint16_t dummy1 = shiftTransaction(toCommand(getADCConfig(false)), false, NULL);
+    uint16_t dummy2 = shiftTransaction(toCommand(getADCConfig(false)), false, NULL);
+
+    uint16_t data = shiftTransaction(toCommand(getADCConfig(true)), true, NULL);
+
+    uint16_t data1 = shiftTransaction(toCommand(getADCConfig(false)), false, NULL);
+
+    uint16_t data2 = shiftTransaction(toCommand(getADCConfig(false)), false, NULL);
     // measure how long it takes to complete a 16-bit r/w cycle using current F_CPU for accurate sample timing
-    cycleTimingBenchmark();
+    // cycleTimingBenchmark();
 
     // reset sample time stamps and force an update sequence at the next read command
-    initSampleTiming();
+    // initSampleTiming();
 
     // sequencer disabled by default
     sequencerActive = false;

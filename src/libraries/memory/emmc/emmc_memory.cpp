@@ -26,12 +26,14 @@ ESP_ERROR EMMC_Memory::begin(uint8_t enable_pin,
     // Only initialize if card is not initialized
     if (!emmc_initialized)
     {
-        // Set Object control variables
-        emmc_enable_pin = enable_pin;
         emmc_detect_pin = detect_pin;
+        emmc_enable_pin = enable_pin;
 
         // Detect if card is inserted
-        pinMode(emmc_detect_pin, INPUT_PULLUP);
+        if (emmc_detect_pin != -1)
+        {
+            pinMode(emmc_detect_pin, INPUT_PULLUP);
+        }
 
         vTaskDelay(25 / portTICK_PERIOD_MS); // This is required of pin will read HIGH. Don't know why, not too important
 
@@ -42,9 +44,12 @@ ESP_ERROR EMMC_Memory::begin(uint8_t enable_pin,
             connection_mode = mode;
 
             // Turn SD card on. Give it sometime to power up
-            pinMode(emmc_enable_pin, OUTPUT);
-            digitalWrite(emmc_enable_pin, LOW);
-            vTaskDelay(SD_POWER_UP_DELAY_mS / portTICK_PERIOD_MS);
+            if (emmc_enable_pin != -1)
+            {
+                pinMode(emmc_enable_pin, OUTPUT);
+                digitalWrite(emmc_enable_pin, LOW);
+                vTaskDelay(SD_POWER_UP_DELAY_mS / portTICK_PERIOD_MS);
+            }
 
             // Set bus width if in eMMC mode
             switch (connection_mode)
@@ -464,7 +469,6 @@ ESP_ERROR EMMC_Memory::onDetectPinChange()
         {
             digitalWrite(emmc_enable_pin, LOW);
             emmc_initialized = false;
-            emmc_enabled = false;
             emmc_detected = false;
         }
         else

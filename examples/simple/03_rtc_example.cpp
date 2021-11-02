@@ -70,7 +70,7 @@ void setup()
     esp.uart0.println("\n\n");
 
     // 2. Init Terminal
-    terminal.begin(&esp.uart0, MICROS_TIMESTAMP_ENABLED, SYSTEM_TIME_ENABLED);
+    terminal.begin(esp.uart0, MICROS_TIMESTAMP_ENABLED, SYSTEM_TIME_ENABLED);
     terminal.setTimeKeeper(&system_time); // Takes in address of the DateTime object of your app if SYSTEM_TIME_ENABLED is true
 
     // 3. Init I2C bus

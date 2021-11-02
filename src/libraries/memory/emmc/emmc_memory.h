@@ -1,16 +1,16 @@
 #pragma once
 
-/* 
-* Company: ANZE Suspension
-* File Name: ESP32UtilitiesEMMC.h
-* Project: ESP32 Utilities EMMC
-* Version: 1.0
-* Compartible Hardware: 
-* Date Created: September 8, 2021
-* Last Modified: September 9, 2021
-* 
-* Copyright 2021, Mateo Segura, All rights reserved.
-*/
+/*
+ * Company: ANZE Suspension
+ * File Name: ESP32UtilitiesEMMC.h
+ * Project: ESP32 Utilities EMMC
+ * Version: 1.0
+ * Compartible Hardware:
+ * Date Created: September 8, 2021
+ * Last Modified: September 9, 2021
+ *
+ * Copyright 2021, Mateo Segura, All rights reserved.
+ */
 
 //*********************************************************     READ ME    **********************************************************/
 
@@ -60,7 +60,6 @@ public:
     {
         emmc_initialized = false;
         emmc_detected = false;
-        emmc_enabled = false;
     }
 
     // -- Initialize SD Card
@@ -74,7 +73,7 @@ public:
     ESP_ERROR makeDirectory(const char *path);
     ESP_ERROR removeDirectory(const char *path);
 
-    //File Operations
+    // File Operations
     ESP_ERROR readFile(const char *path);
     ESP_ERROR writeFile(const char *path, const uint8_t *message);
     ESP_ERROR appendFile(const char *path, const uint8_t *message);
@@ -105,6 +104,12 @@ public:
         return emmc_initialized;
     }
 
+    bool setDetected(bool state)
+    {
+        emmc_detected = state;
+        emmc_initialized = state;
+    }
+
 private:
     // -- Initialization Variables
     eMMC_CONNECTION_MODE connection_mode;
@@ -121,7 +126,6 @@ private:
     // -- Debugging
     bool emmc_initialized;
     bool emmc_detected;
-    bool emmc_enabled;
 
     // -- File system
     fs::FS *file_system;

@@ -119,7 +119,7 @@ private:
     bool terminal_enabled;
 
     // * Terminal port
-    HardwareSerial *terminal_uart_port;
+    HardwareSerial terminal_uart_port = Serial; // Set to UART0 by default
 
     // * Date Time
     DateTime *system_time;
