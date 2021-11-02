@@ -35,10 +35,10 @@
 //
 // Mateo :)
 
+//******************** SETTINGS
 #define LED_BUILT_IN 2
 #define DELAY_PERIOD_mS 1000 // TODO: Change this vaLUE between updates to see new sketch uploaded
 
-//******************** SETTINGS
 // Terminal
 #define UART0_BAUD_RATE 115200         // Set the baudrate of the terminal uart port
 #define MICROS_TIMESTAMP_ENABLED false // Set to true to enabled microsecond time stamp in terminal messages
@@ -84,7 +84,7 @@ void setup()
         }
     }
 
-    // 4. If connected succesfully, get the time from NPT server
+    // 4. If connected succesfully, setup Over the Air Updates
     setupOTA();
 
     // 5. Setup LED PIN as output
@@ -98,6 +98,7 @@ void loop()
 {
     ArduinoOTA.handle();
 
+    // Update LED
     led_state = !led_state;
     digitalWrite(LED_BUILT_IN, led_state);
     delay(DELAY_PERIOD_mS);
