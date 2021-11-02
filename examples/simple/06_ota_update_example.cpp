@@ -1,5 +1,5 @@
 /*
- * File Name: terminal_example.cpp
+ * File Name: ota_update_example.cpp
  * Hardware needed: No extra hardware needed, just a good ol' ESP32 dev. board
  *
  * Copyright 2021, Mateo Segura, All rights reserved.
