@@ -156,8 +156,6 @@ void runWriteTest()
     terminal.println("Average write speed: " + String((avg_write_speed / 1000000), 2) + " MB/s");
 
     esp.uart0.println();
-
-    delay(10000);
 }
 
 void runReadTest()
