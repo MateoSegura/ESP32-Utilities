@@ -89,7 +89,7 @@ protected:
     uint8_t inputConfig; /*!< Input channel configuration. */
     uint8_t refConfig;   /*!< Voltage reference configuration. */
 
-    SPIClass *adc_spi_bus;
+    SPIClass adc_spi_bus;
     SPISettings adc_spi_settings;
     uint8_t adc_cs_pin;
 
@@ -106,7 +106,7 @@ protected:
 
     uint16_t shiftTransaction(uint16_t command, bool readback, uint16_t *rb_cmd_ptr);
     uint16_t toCommand(AD7689_conf cfg);
-    AD7689_conf getADCConfig(bool default_config = false);
+    AD7689_conf getADCConfig(bool default_config = false, bool read_back = false);
     float readTemperature(void);
     void configureSequencer();
     void readChannels(uint8_t channels, uint8_t mode, uint16_t *data, uint16_t *temp);
@@ -122,7 +122,7 @@ protected:
     float getPosRef(uint8_t refS, float posR);
 
 public:
-    ESP_ERROR begin(uint8_t cs_pin, SPIClass *spi_bus, uint64_t spi_bus_clk_frequency);
+    ESP_ERROR begin(uint8_t cs_pin, SPIClass &spi_bus, uint64_t spi_bus_clk_frequency);
     void enableFiltering(bool onOff);
     float acquireChannel(uint8_t channel, uint32_t *timeStamp);
     float acquireChannel(uint8_t channel);
