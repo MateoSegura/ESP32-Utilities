@@ -80,7 +80,7 @@ struct AD7689_conf
  */
 class AD7689
 {
-protected:
+private:
     AD7689_conf conf; /*!< Configuration settings for the ADC. */
 
     float posref;        /*!< Positive voltage reference for unipolar or bipolar mode. */
@@ -109,7 +109,7 @@ protected:
     AD7689_conf getADCConfig(bool default_config = false, bool read_back = false);
     float readTemperature(void);
     void configureSequencer();
-    void readChannels(uint8_t channels, uint8_t mode, uint16_t *data, uint16_t *temp);
+
     float calculateVoltage(uint16_t sample);
     float calculateTemp(uint16_t temp);
     uint32_t initSampleTiming(void);
@@ -124,6 +124,7 @@ protected:
 public:
     ESP_ERROR begin(uint8_t cs_pin, SPIClass &spi_bus, uint64_t spi_bus_clk_frequency);
     void enableFiltering(bool onOff);
+    void readChannels(uint8_t channels, uint8_t mode, uint16_t *data, uint16_t *temp);
     float acquireChannel(uint8_t channel, uint32_t *timeStamp);
     float acquireChannel(uint8_t channel);
     float acquireTemperature();

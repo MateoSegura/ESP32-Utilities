@@ -47,6 +47,7 @@ public:
         minutes = 0;
         seconds = 0;
         milliseconds = 0;
+        microseconds = 0;
     }
 
     uint16_t year;
@@ -56,6 +57,7 @@ public:
     uint8_t minutes;
     uint8_t seconds;
     uint16_t milliseconds;
+    uint16_t microseconds;
 
     String toString(bool date_enabled = false)
     {
@@ -78,6 +80,8 @@ public:
         temp_string += seconds;
         temp_string += ".";
         temp_string += milliseconds;
+        temp_string += ",";
+        temp_string += microseconds;
 
         return temp_string;
     }
@@ -86,17 +90,17 @@ public:
     {
         milliseconds++;
 
-        if (milliseconds == 999)
+        if (milliseconds == 1000)
         {
             milliseconds = 0;
             seconds++;
 
-            if (seconds == 59)
+            if (seconds == 60)
             {
                 seconds = 0;
                 minutes++;
 
-                if (minutes == 59)
+                if (minutes == 60)
                 {
                     minutes = 0;
                     hours++;
@@ -105,6 +109,41 @@ public:
                     {
                         hours = 0;
                         day++;
+                    }
+                }
+            }
+        }
+    }
+
+    void updateMicroseconds()
+    {
+        microseconds = microseconds + 10;
+
+        if (microseconds == 1000)
+        {
+            microseconds = 0;
+            milliseconds++;
+
+            if (milliseconds == 1000)
+            {
+                milliseconds = 0;
+                seconds++;
+
+                if (seconds == 60)
+                {
+                    seconds = 0;
+                    minutes++;
+
+                    if (minutes == 60)
+                    {
+                        minutes = 0;
+                        hours++;
+
+                        if (hours == 24)
+                        {
+                            hours = 0;
+                            day++;
+                        }
                     }
                 }
             }

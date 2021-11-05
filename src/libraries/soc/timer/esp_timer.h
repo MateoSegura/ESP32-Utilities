@@ -1,15 +1,15 @@
 #pragma once
-/* 
-* Company: ANZE Suspension
-* File Name: esp_timer.h
-* Project: ESP32 Utilities
-* Version: 1.0
-* Compartible Hardware: 
-* Date Created: September 8, 2021
-* Last Modified: September 9, 2021
-*
-* Copyright 2021, Mateo Segura, All rights reserved.
-*/
+/*
+ * Company: ANZE Suspension
+ * File Name: esp_timer.h
+ * Project: ESP32 Utilities
+ * Version: 1.0
+ * Compartible Hardware:
+ * Date Created: September 8, 2021
+ * Last Modified: September 9, 2021
+ *
+ * Copyright 2021, Mateo Segura, All rights reserved.
+ */
 
 //*********************************************************     READ ME    **********************************************************/
 
@@ -49,10 +49,15 @@ public:
         timerDetachInterrupt(timer);
     }
 
-    void timerPeriod(double milliseconds, bool auto_relaod = true)
+    void timerPeriodMilliseconds(double milliseconds, bool auto_relaod = true)
     {
-        milliseconds = milliseconds * 100;
+        milliseconds = milliseconds * 1000;
         timerAlarmWrite(timer, milliseconds, auto_relaod);
+    }
+
+    void timerPeriodMicroseconds(double microseconds, bool auto_relaod = true)
+    {
+        timerAlarmWrite(timer, microseconds, true);
     }
 
     void enableInterrupt()
@@ -79,8 +84,8 @@ private:
     hw_timer_t *timer = NULL;
 
     uint8_t timer_number;
-    uint32_t timer_prescaler = 800; // 80000000 / 80000 = 1000 ticks per second
-    bool count_up = true;           // Count up by default
+    uint32_t timer_prescaler = 80; // 80000000 / 80000 = 1000 ticks per second
+    bool count_up = true;          // Count up by default
 };
 
 // End.

@@ -23,22 +23,22 @@
 
 uint16_t AD7689::shiftTransaction(uint16_t command, bool readback, uint16_t *rb_cmd_ptr)
 {
-    uint16_t data;
+    uint16_t data = 0;
 
     // allow time to sample
-    delayMicroseconds(TCONV);
-
     digitalWrite(adc_cs_pin, LOW);
+    // delayMicroseconds(TCONV);
 
     // if a readback is requested, the 16 bit frame is extended with another 16 bits to retrieve the value
     if (readback)
     {
-        // duplicate previous command
-        // uint16_t res = (adc_spi_bus->transfer(command >> 8) << 8) | adc_spi_bus->transfer(command & 0xFF);
-        uint16_t res = adc_spi_bus.transfer32(command << 16);
+        // Send 32 clock cycles command to get data back, and then get that data into a 16-bit integer
+        uint32_t readback_command = adc_spi_bus.transfer32(command << 16);
+        uint16_t response = readback_command;
+
         if (rb_cmd_ptr)
         {
-            *rb_cmd_ptr = res;
+            *rb_cmd_ptr = response;
         }
     }
     else
@@ -48,10 +48,9 @@ uint16_t AD7689::shiftTransaction(uint16_t command, bool readback, uint16_t *rb_
         data = adc_spi_bus.transfer16(command);
     }
 
-    digitalWrite(adc_cs_pin, HIGH);
-
     // delay to allow data acquisition for the next cycle
-    delayMicroseconds(TACQ); // minumum 1.2µs
+    digitalWrite(adc_cs_pin, HIGH);
+    // delayMicroseconds(TACQ); // minumum 1.2µs
 
     return data;
 }
@@ -67,6 +66,7 @@ uint16_t AD7689::toCommand(AD7689_conf cfg)
 
     // build 14 bit configuration word
     uint16_t command = 0;
+
     command |= cfg.CFG_conf << CFG;             // update config on chip
     command |= (cfg.INCC_conf & 0b111) << INCC; // mode - single ended, differential, ref, etc
     command |= (cfg.INx_conf & 0b111) << INx;   // channel
@@ -95,8 +95,9 @@ AD7689_conf AD7689::getADCConfig(bool default_config, bool read_back)
     def.INCC_conf = INCC_UNIPOLAR_REF_GND; // default unipolar inputs, with reference to ground
     def.INx_conf = TOTAL_CHANNELS;         // read all channels
     def.BW_conf = true;                    // full bandwidth
-    def.REF_conf = INT_REF_4096;           // use interal 4.096V reference voltage
-    def.SEQ_conf = SEQ_OFF;                // disable sequencer
+    // def.REF_conf = INT_REF_4096;           // use interal 4.096V reference voltage
+    def.REF_conf = EXT_REF_TEMP_ON;
+    def.SEQ_conf = SEQ_OFF; // disable sequencer
 
     if (read_back)
     {
@@ -169,6 +170,7 @@ void AD7689::configureSequencer()
     AD7689_conf sequence = getADCConfig();
 
     // turn on sequencer if it hasn't been turned on yet, and set it to read temperature too
+    sequence.REF_conf = EXT_REF_TEMP_ON;
     sequence.SEQ_conf = SEQ_SCAN_INPUT_TEMP;
     // disable readback
     sequence.RB_conf = false;
@@ -222,22 +224,22 @@ void AD7689::readChannels(uint8_t channels, uint8_t mode, uint16_t data[], uint1
     for (uint8_t ch = 0; ch < scans; ch++)
     {
         data[ch] = shiftTransaction(0, false, NULL);
-        if (now < lastSeqEndTime)
-        { // micros() overflow
-            lastSeqEndTime = nowPlus2Frames;
-        }
-        if ((timeStamps[ch] < lastSeqEndTime) || timeStamps[ch] < now)
-        { // micros overflow
-            timeStamps[ch] = nowPlus2Frames;
-        }
-        if (ch < 2)
-        { // calculate time stamp based on ending of previous sequence for first 2 frames
-            timeStamps[ch] = (lastSeqEndTime < nowPlus2Frames) ? nowPlus2Frames : lastSeqEndTime - (1 - ch) * framePeriod;
-        }
-        else
-        {
-            timeStamps[ch] = now; // - framePeriod * 2; // sequenceTime in µs, 2 frames lag
-        }
+        // if (now < lastSeqEndTime)
+        // { // micros() overflow
+        //     lastSeqEndTime = nowPlus2Frames;
+        // }
+        // if ((timeStamps[ch] < lastSeqEndTime) || timeStamps[ch] < now)
+        // { // micros overflow
+        //     timeStamps[ch] = nowPlus2Frames;
+        // }
+        // if (ch < 2)
+        // { // calculate time stamp based on ending of previous sequence for first 2 frames
+        //     timeStamps[ch] = (lastSeqEndTime < nowPlus2Frames) ? nowPlus2Frames : lastSeqEndTime - (1 - ch) * framePeriod;
+        // }
+        // else
+        // {
+        //     timeStamps[ch] = now; // - framePeriod * 2; // sequenceTime in µs, 2 frames lag
+        // }
     }
 
     // capture temperature too
@@ -429,12 +431,38 @@ ESP_ERROR AD7689::begin(uint8_t cs_pin, SPIClass &spi_bus, uint64_t spi_bus_clk_
     // start-up sequence
     pinMode(adc_cs_pin, OUTPUT);
 
+    // start-up sequence
+    // give ADC time to start up
+    // delay(STARTUP_DELAY);
+
     digitalWrite(adc_cs_pin, LOW);
     delayMicroseconds(TACQ); // miniumum 10 ns
     digitalWrite(adc_cs_pin, HIGH);
     delayMicroseconds(TCONV); // minimum 3.2 µs
 
-    //* 1. 2 dummy reads
+    // measure how long it takes to complete a 16-bit r/w cycle using current F_CPU for accurate sample timing
+    cycleTimingBenchmark();
+
+    // reset sample time stamps and force an update sequence at the next read command
+    initSampleTiming();
+
+    // sequencer disabled by default
+    sequencerActive = false;
+
+    // //* 1. 2 dummy reads
+    // // digitalWrite(adc_cs_pin, LOW);
+    // // adc_spi_bus.transfer16(0xFFFF);
+    // // digitalWrite(adc_cs_pin, HIGH);
+
+    // // delayMicroseconds(TCONV); // minimum 3.2 µs
+
+    // // digitalWrite(adc_cs_pin, LOW);
+    // // adc_spi_bus.transfer16(0xFFFF);
+    // // digitalWrite(adc_cs_pin, HIGH);
+
+    // delayMicroseconds(TCONV); // minimum 3.2 µs
+
+    // //* 2. Setup sequencer
     // digitalWrite(adc_cs_pin, LOW);
     // adc_spi_bus.transfer16(0xFFFF);
     // digitalWrite(adc_cs_pin, HIGH);
@@ -445,29 +473,16 @@ ESP_ERROR AD7689::begin(uint8_t cs_pin, SPIClass &spi_bus, uint64_t spi_bus_clk_
     // adc_spi_bus.transfer16(0xFFFF);
     // digitalWrite(adc_cs_pin, HIGH);
 
-    delayMicroseconds(TCONV); // minimum 3.2 µs
-
-    //* 2. Setup sequencer
-    digitalWrite(adc_cs_pin, LOW);
-    adc_spi_bus.transfer16(0xFFFF);
-    digitalWrite(adc_cs_pin, HIGH);
-
-    delayMicroseconds(TCONV); // minimum 3.2 µs
-
-    digitalWrite(adc_cs_pin, LOW);
-    adc_spi_bus.transfer16(0xFFFF);
-    digitalWrite(adc_cs_pin, HIGH);
-
-    //* 3. Dummy reads for data
-    int i = 0;
-    while (i < 15)
-    {
-        digitalWrite(adc_cs_pin, LOW);
-        uint16_t data3 = adc_spi_bus.transfer16(0x0000);
-        digitalWrite(adc_cs_pin, HIGH);
-        delayMicroseconds(TCONV); // minimum 3.2 µs
-        i++;
-    }
+    // //* 3. Dummy reads for data
+    // int i = 0;
+    // while (i < 15)
+    // {
+    //     digitalWrite(adc_cs_pin, LOW);
+    //     uint16_t data3 = adc_spi_bus.transfer16(0x0000);
+    //     digitalWrite(adc_cs_pin, HIGH);
+    //     delayMicroseconds(TCONV); // minimum 3.2 µs
+    //     i++;
+    // }
 
     // uint16_t dummy1 = shiftTransaction(toCommand(getADCConfig(false)), false, NULL);
 
@@ -506,27 +521,27 @@ void AD7689::enableFiltering(bool onOff)
 // 2017 08 14 update to try to fix micros() overflow bug
 float AD7689::acquireChannel(uint8_t channel, uint32_t *timeStamp)
 {
-    uint32_t now = micros();
-    if (now < timeStamps[channel])
-    {                                                                            // micros() overflow !
-        timeStamps[channel] = micros() + framePeriod * (TOTAL_CHANNELS - 1) + 1; // this will force a channel read, I hope!
-    }
+    // uint32_t now = micros();
+    // if (now < timeStamps[channel])
+    // {                                                                            // micros() overflow !
+    //     timeStamps[channel] = micros() + framePeriod * (TOTAL_CHANNELS - 1) + 1; // this will force a channel read, I hope!
+    // }
 
-    if (now > (timeStamps[channel] + framePeriod * (TOTAL_CHANNELS - 1)))
-    { // sequence outdated, acquire a new one
-        uint8_t cycles = 1;
-        if (channel < 2)
-            cycles++; // double sequence to update first 2 channels
+    // if (now > (timeStamps[channel] + framePeriod * (TOTAL_CHANNELS - 1)))
+    // { // sequence outdated, acquire a new one
+    uint8_t cycles = 1;
+    if (channel < 2)
+        cycles++; // double sequence to update first 2 channels
 
-        // run 1 or 2 sequences depending on the outdated channel
-        for (uint8_t cycle = 0; cycle < cycles; cycle++)
-            readChannels(inputCount, ((inputConfig == INCC_BIPOLAR_DIFF) || (inputConfig == INCC_UNIPOLAR_DIFF)), samples, &curTemp);
-    }
+    // run 1 or 2 sequences depending on the outdated channel
+    for (uint8_t cycle = 0; cycle < cycles; cycle++)
+        readChannels(inputCount, ((inputConfig == INCC_BIPOLAR_DIFF) || (inputConfig == INCC_UNIPOLAR_DIFF)), samples, &curTemp);
+    //}
 
-    if (timeStamp)
-    {
-        *timeStamp = timeStamps[channel];
-    }
+    // if (timeStamp)
+    // {
+    //     *timeStamp = timeStamps[channel];
+    // }
 
     return calculateVoltage(samples[channel]);
 }
