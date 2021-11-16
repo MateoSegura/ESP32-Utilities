@@ -45,7 +45,7 @@ uint16_t io_expansion_interrupt_queue_length = 10;
 
 //******************** INTERRUPTS
 int interrupt_time = 0;
-bool request = false;
+
 bool state = false;
 
 static void IRAM_ATTR externalIO_Interrupt()

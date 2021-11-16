@@ -102,9 +102,16 @@ public:
     // * End
     void end();
 
-    void setTimeKeeper(DateTime *time)
+    void setTimeKeeper(DateTime &time)
     {
-        system_time = time;
+        system_time = &time;
+    }
+
+    void printBanner(char *title)
+    {
+        terminal_uart_port.print("\n\n***********************************\t");
+        terminal_uart_port.print(title);
+        terminal_uart_port.print("\n\n");
     }
 
     // * Print serial message with the format described above

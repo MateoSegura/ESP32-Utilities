@@ -104,12 +104,24 @@ String Terminal::createTimeStamp(unsigned long event_time)
         //         system_time->milliseconds);
 
         // -- Create time string
-        sprintf(system_time_buffer,
-                "%02d:%02d:%02d.%3d", // 25 character String
-                system_time->hours,
-                system_time->minutes,
-                system_time->seconds,
-                system_time->milliseconds);
+        if (system_time != nullptr)
+        {
+            sprintf(system_time_buffer,
+                    "%02d:%02d:%02d.%3d", // 25 character String
+                    system_time->hours,
+                    system_time->minutes,
+                    system_time->seconds,
+                    system_time->milliseconds);
+        }
+        else
+        {
+            sprintf(system_time_buffer,
+                    "%02d:%02d:%02d.%3d", // 25 character String
+                    0,
+                    0,
+                    0,
+                    0);
+        }
 
         temp_string += "[";
         temp_string += this->system_time_buffer;

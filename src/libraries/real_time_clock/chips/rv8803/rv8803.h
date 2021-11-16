@@ -126,7 +126,7 @@ Distributed as-is; no warranty is given.
 
 #define TIME_ARRAY_LENGTH 8 // Total number of writable values in device
 
-enum time_order
+enum timeOrder
 {
 	TIME_HUNDREDTHS, // 0
 	TIME_SECONDS,	 // 1
