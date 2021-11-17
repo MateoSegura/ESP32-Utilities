@@ -21,7 +21,8 @@
 // turning it off for production releases.
 //
 // Similarly, in dual-core setups like the ESP32, one can use an RTOS task with low-priotiry to print messages
-// from other tasks running on both cores, with accurate timing information about the processes in such tasks
+// from other tasks running on both cores, with accurate timing information about the processes in such tasks,
+// without affecting application timing
 //
 // There's an RTOS version of this example under "examples/rtos/terminal_example_rtos.cpp"
 //
