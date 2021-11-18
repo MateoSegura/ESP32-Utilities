@@ -18,7 +18,7 @@ lib_deps =
 	https://github.com/MateoSegura/ESP32-Utilities.git
 	bblanchon/ArduinoJson@^6.18.5
 ```
-3. Go to the folder *.pio/libdeps* and you should see the libraries folder in there. In the *examples/simple* folder, copy the code in the file *01_soc_example.cpp* and compile it.
+3. Go to the folder *.pio/libdeps* and you should see the libraries folder in there. In the *examples/simple* folder, copy the code in the file *01_soc_example.cpp* to your *main.cpp* and compile the project.
 
 The first time arround it will take a few seconds to compile because the libraries include the Bluetooth & WiFi headers so it'll take some time to compile these sources. 
 
