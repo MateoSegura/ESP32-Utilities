@@ -10,6 +10,18 @@ These libraries are very easy to port to other architectures like the iMXRT proc
 
 The *simple* examples folder has enumerated examples that cover each of the libraries in great detail. I recommend you start there & read all the comments & instructions. I've linked several resources where necessary, and I highly encourage you to read these articles before diving into using the libraries. 
 
+1. Create a new [Platform IO](https://platformio.org) project in [Visual Studio Code](https://code.visualstudio.com), and select *DOIT ESP32 DEVKIT V1* as your board.
+2. In your *platformio.ini* file, paste the following:
+
+``` ini
+lib_deps = 
+	https://github.com/MateoSegura/ESP32-Utilities.git
+	bblanchon/ArduinoJson@^6.18.5
+```
+3. Go to the folder *.pio/libdeps* and you should see the libraries folder in there. In the *examples/simple* folder, copy the code in the file *01_soc_example.cpp* and compile it.
+
+The first time arround it will take a few seconds to compile because the libraries include the Bluetooth & WiFi headers so it'll take some time to compile these sources. 
+
 ## Hardware needed
 
 Although these libraries were designed to be used with the [ESP32 System on Module](https://github.com/MateoSegura/ESP32-Internet-of-Things-SoM), there's absoluetly no reason as to why you can't use them as long as you have any of the following hardware:
@@ -21,6 +33,8 @@ Although these libraries were designed to be used with the [ESP32 System on Modu
 - [BME688 Environmental sensor](https://www.adafruit.com/product/5046?gclid=Cj0KCQiAkNiMBhCxARIsAIDDKNUuQkEDhbs2lozbv5vCGB4HdOvyR8xC1shPneeGXWJEfm6Sejvvg3AaAswrEALw_wcB)
 - [RV-3028 Real Time Clock (RTC)](https://www.digikey.com/en/products/detail/pimoroni-ltd/PIM449/13537132)
 - [uSD Card](https://www.sparkfun.com/products/12941)
+
+All of these modules were used in the original prototype of the ESP32 SoM, and all the libraries have been tested to work with them. Make sure you follow the connections described in each example.
 
 ## Error Handling
 
