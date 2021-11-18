@@ -118,6 +118,8 @@ private:
     uint8_t emmc_enable_pin;
     uint8_t emmc_detect_pin;
 
+    uint8_t flush_count;
+
     // -- Card Info
     long emmc_memory_size;
     long emmc_total_memory_space;

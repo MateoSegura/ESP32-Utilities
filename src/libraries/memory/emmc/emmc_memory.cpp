@@ -23,6 +23,8 @@ ESP_ERROR EMMC_Memory::begin(uint8_t enable_pin,
     ESP_ERROR err;
     err.on_error = false;
 
+    flush_count = 0;
+
     // Only initialize if card is not initialized
     if (!emmc_initialized)
     {
@@ -33,9 +35,8 @@ ESP_ERROR EMMC_Memory::begin(uint8_t enable_pin,
         if (emmc_detect_pin != -1)
         {
             pinMode(emmc_detect_pin, INPUT_PULLUP);
+            vTaskDelay(25 / portTICK_PERIOD_MS); // This is required of pin will read HIGH. Don't know why, not too important
         }
-
-        vTaskDelay(25 / portTICK_PERIOD_MS); // This is required of pin will read HIGH. Don't know why, not too important
 
         if (digitalRead(emmc_detect_pin) == LOW || emmc_detect_pin == -1)
         {
@@ -341,7 +342,7 @@ ESP_ERROR EMMC_Memory::appendFile(const char *path, const char *data)
 
     if (emmc_initialized)
     {
-        // File file = this->file_system->open(path, FILE_APPEND);
+        // myFile = this->file_system->open(path, FILE_APPEND);
 
         // Error opening file
         if (!myFile)
@@ -357,10 +358,12 @@ ESP_ERROR EMMC_Memory::appendFile(const char *path, const char *data)
         {
             if (myFile.println(data))
             {
-                temp_message += "Appending to file \"";
-                temp_message += path;
-                temp_message += "\" was succesful";
-                myFile.flush();
+                flush_count++;
+
+                if (flush_count == 255)
+                {
+                    myFile.flush();
+                }
             }
             else
             {
