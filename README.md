@@ -1,15 +1,19 @@
 # ESP32-Utilities
 A collection of libraries used to create IoT embedded applications with the ESP32 family of microcontrollers and the Arduino framework.
 
+They implement useful methods, such as writting/reading files, bluetooth communication, usb serial communication & file download, high-data rate analog sampling, amongst other things, while taking away a lot of the complexity of error handling & terminal debug output.
+
 These libraries can be used with/without FreeRTOS.
 
 # Why should I use these libraries?
 
-These libraries are the results of working with the ESP32 family of MCUs for 3+ years. These libraries are great for writting performant applications, fast. 
+These libraries are great for writting performant applications, fast. The drivers in these libraries are for ICs that have great features for Control Systems, such as high quality ADC, a CAN FD controller with MANY useful features, an Internal motion Unit, I/O expansion and external memory (uSD).
 
-If you've written code using the Arduino framework, these libraries are here to help you take it to the **next level**. Although I love the ESP-IDF for the ESP32, it's only made for the ESP32 MCU, and I would like to use other chips for different applications, in the future. 
+If you've written code using the Arduino framework for any of these components, you've probably run into the problem of having **very large c++ files** by the time you're finishing your code.
 
-These libraries are very easy to port to other architectures like the iMXRT processor in the Teensy boards, and I have plans of doing so in the future.
+These libraries can either help you write small applications faster, or large & complex applications in a very organized & maintainable manner.
+
+Lastly, these libraries are very easy to port to other architectures like the iMXRT processor in the [Teensy](https://www.pjrc.com/teensy/) boards, and I have plans of doing so in the future.
 
 # Getting Started
 
