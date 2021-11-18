@@ -95,6 +95,12 @@ void loop(){
 }
 ```
 
-Along with these messages, Espressif's debug output will also be sent to the terminal on **abort**. This will help you find bugs & problems in your apps quickly & efficiently.
+And you will see the following output in your serial terminal
 
-**Most importantly however,** is the ability to use these methods in your own classes, and being able to return these debug messages as many layers up as needed.
+```
+[            51 mS] [+   11 mS] [1] [INF] [TER] - External storage is not inititalized
+
+Stopping program. Restart
+```
+
+Along with these messages, Espressif's debug output will also be sent to the terminal on **abort**. This will help you find bugs & problems in your apps quickly & efficiently.
