@@ -46,33 +46,55 @@ The **simple** examples folder has enumerated examples that cover each of the li
 
 ## Error Handling
 
-These libraries end up being called by a higher abstraction layers, or in some cases many. In order to be able to pass any errors to higher abstraction layers, all functions that **can** return a known error, are of the type **ESP_ERROR**, en example is given below:
+These libraries end up being called by a higher abstraction layers, or in some cases many. In order to be able to pass any errors to higher abstraction layers, all functions that **can** return a known error, are of the type **ESP_ERROR**.
 
-
-
-This hardware is combined in a System on Module (SoM) with a small footprint, in a 4-layer board, and all signals are routed out through high density connectors.
-
-The reason for this board was to create the bases of a eco-system on electronic control units for a variety of products in the automotive/industrial sector. This allows me to re-use a big percentage of the software across all of these projects.
+For example, let's say you call the following method to make a new directory without initializing the card:
 
 ``` C++
-ESP_ERROR initSystem(){
-  
-  ESP_ERROR err;
-  
-  // Some method that can return an error 
-  if(system.i2c_adddres() != 0x75)
-  {
-    err.on_error = true;
-    err.debug_messsage = "Sensor not found in I2C bus. Check connections";
+ESP_ERROR EMMC_Memory::makeDirectory(const char *path)
+{
+    ESP_ERROR err;
+    String temp_message;
+
+    if (emmc_initialized)
+    {
+        if (file_system->mkdir(path))
+        {
+            temp_message += "Directory \"";
+            temp_message += path;
+            temp_message += "\"";
+            temp_message += " created succesfully";
+        }
+        else
+        {
+            err.on_error = true;
+            temp_message += "Error creating directory";
+        }
+    }
+    else
+    {
+        err.on_error = true;
+        temp_message += "External storage is not inititalized";
+    }
+
+    err.debug_message = temp_message;
     return err;
-  }
-  
-  // Some initialization code goes here that can also return ...
-  
-  return err; // If no errors, the on_error boolean is initialized as false so it will just return false
 }
 ```
 
-This hardware is combined in a System on Module (SoM) with a small footprint, in a 4-layer board, and all signals are routed out through high density connectors.
+On your application layer, this would look something like the following:
 
-The reason for this board was to create the bases of a eco-system on electronic control units for a variety of products in the automotive/industrial sector. This allows me to re-use a big percentage of the software across all of these projects.
+``` C++
+void loop(){
+  
+  ESP_ERROR make_directory = emmc.makeDirectory("/test");
+  
+  if(make_directory.on_error)
+    abort(make_directory.debug_message); // Or any other debugging function call of your choice
+
+}
+```
+
+Along with these messages, Espressif's debug output will also be sent to the terminal on **abort**. This will help you find bugs & problems in your apps quickly & efficiently.
+
+**Most importantly however,** is the ability to use these methods in your own classes, and being able to return these debug messages as many layers up as needed.
