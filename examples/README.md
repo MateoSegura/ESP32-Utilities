@@ -98,7 +98,7 @@ void loop(){
 And you will see the following output in your serial terminal
 
 ```
-[            51 mS] [+   11 mS] [1] [INF] [TER] - External storage is not inititalized
+[            51 mS] [+   11 mS] [1] [ERR] [MMC] - External storage is not inititalized
 
 Stopping program. Restart
 ```
