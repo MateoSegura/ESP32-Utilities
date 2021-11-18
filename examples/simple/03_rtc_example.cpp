@@ -71,14 +71,14 @@ void setup()
 
     // 2. Init Terminal
     terminal.begin(esp.uart0, MICROS_TIMESTAMP_ENABLED, SYSTEM_TIME_ENABLED);
-    terminal.setTimeKeeper(&system_time); // Takes in address of the DateTime object of your app if SYSTEM_TIME_ENABLED is true
+    terminal.setTimeKeeper(system_time); // Takes in the DateTime object of your app if SYSTEM_TIME_ENABLED is true
 
     // 3. Init I2C bus
     esp.i2c0.begin(I2C0_SDA_PIN, I2C0_SCL_PIN, I2C0_FREQUENCY); // Refer to soc_example.cpp for information on this function
 
     // 4. Init real time clock
-    long initial_process_time = micros();                    // For process time measuring
-    ESP_ERROR initialize_rtc = rtc.begin(RTC_IC, &esp.i2c0); // begin(IC_TYPE, I2C port)
+    long initial_process_time = micros();                   // For process time measuring
+    ESP_ERROR initialize_rtc = rtc.begin(RTC_IC, esp.i2c0); // begin(IC_TYPE, I2C port)
 
     if (initialize_rtc.on_error) // Catch error
     {
@@ -106,7 +106,7 @@ void setup()
 
     esp.timer0.setup();
     esp.timer0.attachInterrupt(updateTime);
-    esp.timer0.timerPeriod(1); // in milliseconds
+    esp.timer0.timerPeriodMilliseconds(1); // in milliseconds
     esp.timer0.enableInterrupt();
 }
 
