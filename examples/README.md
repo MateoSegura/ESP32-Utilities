@@ -77,6 +77,8 @@ ESP_ERROR EMMC_Memory::makeDirectory(const char *path)
 On your application layer, this would look something like the following:
 
 ``` C++
+EMMC_Memory emmc;
+
 void loop(){
   
   ESP_ERROR make_directory = emmc.makeDirectory("/test");
