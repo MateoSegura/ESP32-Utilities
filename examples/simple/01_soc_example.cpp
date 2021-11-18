@@ -146,8 +146,8 @@ void setup()
     //
     //
     esp.timer0.setup();
-    esp.timer0.timerPeriod(1000, true);           // (milliseconds, auto reload)
-    esp.timer0.attachInterrupt(interruptExample); // (function to execute when timer expires)
+    esp.timer0.timerPeriodMilliseconds(1000, true); // (milliseconds, auto reload)
+    esp.timer0.attachInterrupt(interruptExample);   // (function to execute when timer expires)
     esp.timer0.enableInterrupt();
 
     //* 5. SoC Utilities

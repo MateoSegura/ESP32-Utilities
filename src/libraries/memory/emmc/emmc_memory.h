@@ -75,8 +75,8 @@ public:
 
     // File Operations
     ESP_ERROR readFile(const char *path);
-    ESP_ERROR writeFile(const char *path, const uint8_t *message);
-    ESP_ERROR appendFile(const char *path, const uint8_t *message);
+    ESP_ERROR writeFile(const char *path, char *data, uint16_t length);
+    ESP_ERROR appendFile(const char *path, const char *data);
     ESP_ERROR renameFile(const char *path1, const char *path2);
     ESP_ERROR deleteFile(const char *path);
 

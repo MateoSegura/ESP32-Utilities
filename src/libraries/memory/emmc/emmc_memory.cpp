@@ -284,7 +284,7 @@ ESP_ERROR EMMC_Memory::readFile(const char *path)
     return err;
 }
 
-ESP_ERROR EMMC_Memory::writeFile(const char *path, const uint8_t *message)
+ESP_ERROR EMMC_Memory::writeFile(const char *path, char *data, uint16_t length)
 {
     ESP_ERROR err;
     err.on_error = false;
@@ -307,7 +307,7 @@ ESP_ERROR EMMC_Memory::writeFile(const char *path, const uint8_t *message)
         // If filed opened correctly
         else
         {
-            if (myFile.write(message, 512))
+            if (myFile.print(data))
             {
                 temp_message += "Appending to file \"";
                 temp_message += path;
@@ -327,11 +327,12 @@ ESP_ERROR EMMC_Memory::writeFile(const char *path, const uint8_t *message)
         err.on_error = true;
         temp_message += "External storage is not inititalized";
     }
+
     err.debug_message = temp_message;
     return err;
 }
 
-ESP_ERROR EMMC_Memory::appendFile(const char *path, const uint8_t *message)
+ESP_ERROR EMMC_Memory::appendFile(const char *path, const char *data)
 {
     ESP_ERROR err;
     err.on_error = false;
@@ -354,7 +355,7 @@ ESP_ERROR EMMC_Memory::appendFile(const char *path, const uint8_t *message)
         // If filed opened correctly
         else
         {
-            if (myFile.write(message, 512))
+            if (myFile.println(data))
             {
                 temp_message += "Appending to file \"";
                 temp_message += path;
