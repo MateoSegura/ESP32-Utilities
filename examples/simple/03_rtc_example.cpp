@@ -54,7 +54,7 @@ DateTime system_time; // DateTime object
 // Period millisecond hardware timer to keep system time after initialized
 static void IRAM_ATTR updateTime()
 {
-    rtc.updateMillisecondsCounter(&system_time);
+    rtc.updateMillisecondsCounter(system_time);
 }
 
 //********************  SETUP
