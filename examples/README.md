@@ -12,14 +12,15 @@ The *simple* examples folder has enumerated examples that cover each of the libr
 
 ## Hardware needed
 
-Although these libraries were designed to be used with the [ESP32 System on Module]https://github.com/MateoSegura/ESP32-Internet-of-Things-SoM
-- ESP32 Development board
-- MCP2518FD CAN 2.0B/FD Controller
-- AD7689 16-bit ASR Analog to Digital (ADC) converter
-- MPU9250 Internal Motion Unit (IMU)
-- BME688 Environmental sensor
-- RV-3028 Real Time Clock (RTC)
-- uSD Card
+Although these libraries were designed to be used with the [ESP32 System on Module](https://github.com/MateoSegura/ESP32-Internet-of-Things-SoM), there's absoluetly no reason as to why you can't use them as long as you have any of the following hardware:
+
+- [ESP32 Development board](https://www.sparkfun.com/products/18018)
+- [MCP2518FD CAN 2.0B/FD Controller](https://www.mikroe.com/mcp2518fd-click)
+- [AD7689 16-bit ASR Analog to Digital (ADC) converter](https://www.mateosegura.com/blog/ad7689)
+- [MPU9250 Internal Motion Unit (IMU)](https://www.amazon.com/HiLetgo-Gyroscope-Acceleration-Accelerator-Magnetometer/dp/B01I1J0Z7Y)
+- [BME688 Environmental sensor](https://www.adafruit.com/product/5046?gclid=Cj0KCQiAkNiMBhCxARIsAIDDKNUuQkEDhbs2lozbv5vCGB4HdOvyR8xC1shPneeGXWJEfm6Sejvvg3AaAswrEALw_wcB)
+- [RV-3028 Real Time Clock (RTC)](https://www.digikey.com/en/products/detail/pimoroni-ltd/PIM449/13537132)
+- [uSD Card](https://www.sparkfun.com/products/12941)
 
 ## Error Handling
 
