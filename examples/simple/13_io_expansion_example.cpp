@@ -91,7 +91,7 @@ void setup()
     esp.uart0.println("\n\n");
 
     // 2. Init Terminal
-    terminal.begin(&esp.uart0, MICROS_TIMESTAMP_ENABLED, SYSTEM_TIME_ENABLED);
+    terminal.begin(esp.uart0, MICROS_TIMESTAMP_ENABLED, SYSTEM_TIME_ENABLED);
 
     // 3. Init I2C bus
     esp.i2c0.begin(I2C0_SDA_PIN, I2C0_SCL_PIN, I2C0_FREQUENCY); // Refer to soc_example.cpp for information on this function
