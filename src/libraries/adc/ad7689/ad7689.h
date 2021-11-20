@@ -110,7 +110,7 @@ private:
     float readTemperature(void);
     void configureSequencer();
 
-    float calculateVoltage(uint16_t sample);
+    // float calculateVoltage(uint16_t sample);
     float calculateTemp(uint16_t temp);
     uint32_t initSampleTiming(void);
     void cycleTimingBenchmark(void);
@@ -129,5 +129,6 @@ public:
     float acquireChannel(uint8_t channel);
     float acquireTemperature();
     bool selftest(void);
+    float calculateVoltage(uint16_t sample);
 };
 #endif

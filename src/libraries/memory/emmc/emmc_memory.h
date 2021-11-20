@@ -104,7 +104,7 @@ public:
         return emmc_initialized;
     }
 
-    bool setDetected(bool state)
+    void setDetected(bool state)
     {
         emmc_detected = state;
         emmc_initialized = state;

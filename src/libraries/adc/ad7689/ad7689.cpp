@@ -95,8 +95,8 @@ AD7689_conf AD7689::getADCConfig(bool default_config, bool read_back)
     def.INCC_conf = INCC_UNIPOLAR_REF_GND; // default unipolar inputs, with reference to ground
     def.INx_conf = TOTAL_CHANNELS;         // read all channels
     def.BW_conf = true;                    // full bandwidth
-    // def.REF_conf = INT_REF_4096;           // use interal 4.096V reference voltage
-    def.REF_conf = EXT_REF_TEMP_ON;
+    def.REF_conf = INT_REF_4096;           // use interal 4.096V reference voltage
+    // def.REF_conf = EXT_REF_TEMP_ON;
     def.SEQ_conf = SEQ_OFF; // disable sequencer
 
     if (read_back)
@@ -170,8 +170,11 @@ void AD7689::configureSequencer()
     AD7689_conf sequence = getADCConfig();
 
     // turn on sequencer if it hasn't been turned on yet, and set it to read temperature too
-    sequence.REF_conf = EXT_REF_TEMP_ON;
+    // sequence.REF_conf = EXT_REF_TEMP_ON;
+    sequence.REF_conf = INT_REF_4096;
+    // sequence.REF_conf = INTERNAL_25;
     sequence.SEQ_conf = SEQ_SCAN_INPUT_TEMP;
+
     // disable readback
     sequence.RB_conf = false;
     // overwrite existing command
@@ -408,19 +411,19 @@ ESP_ERROR AD7689::begin(uint8_t cs_pin, SPIClass &spi_bus, uint64_t spi_bus_clk_
     inputCount = 8;
     inputConfig = getInputConfig(UNIPOLAR_MODE, false);
 
-    negref = getNegRef(INTERNAL_25, UNIPOLAR_MODE);
-    // negref(getNegRef(INTERNAL_4096, UNIPOLAR_MODE);
+    // negref = getNegRef(INTERNAL_25, UNIPOLAR_MODE);
+    negref = getNegRef(INTERNAL_4096, UNIPOLAR_MODE);
 
-    refsrc = getRefSrc(REF_INTERNAL, INTERNAL_25);
-    // refsrc(getRefSrc(REF_INTERNAL, INTERNAL_4096);
+    // refsrc = getRefSrc(REF_INTERNAL, INTERNAL_25);
+    refsrc = getRefSrc(REF_INTERNAL, INTERNAL_4096);
 
-    posref = getPosRef(REF_INTERNAL, INTERNAL_25);
-    // posref(getPosRef(REF_INTERNAL, INTERNAL_4096);
+    // posref = getPosRef(REF_INTERNAL, INTERNAL_25);
+    posref = getPosRef(REF_INTERNAL, INTERNAL_4096);
 
-    refConfig = INT_REF_25;
-    // refConfig(INT_REF_4096);
+    // refConfig = INT_REF_25;
+    refConfig = INT_REF_4096;
 
-    filterConfig = false; // full bandwidth
+    filterConfig = true; // full bandwidth
 
     adc_cs_pin = cs_pin;
     adc_spi_bus = spi_bus;
@@ -535,7 +538,8 @@ float AD7689::acquireChannel(uint8_t channel, uint32_t *timeStamp)
 
     // run 1 or 2 sequences depending on the outdated channel
     for (uint8_t cycle = 0; cycle < cycles; cycle++)
-        readChannels(inputCount, ((inputConfig == INCC_BIPOLAR_DIFF) || (inputConfig == INCC_UNIPOLAR_DIFF)), samples, &curTemp);
+        // readChannels(inputCount, ((inputConfig == INCC_BIPOLAR_DIFF) || (inputConfig == INCC_UNIPOLAR_DIFF)), samples, &curTemp);
+        readChannels(inputCount, UNIPOLAR_MODE, samples, &curTemp);
     //}
 
     // if (timeStamp)

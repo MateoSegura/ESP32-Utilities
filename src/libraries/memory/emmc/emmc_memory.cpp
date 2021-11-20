@@ -313,7 +313,7 @@ ESP_ERROR EMMC_Memory::writeFile(const char *path, char *data, uint16_t length)
                 temp_message += "Appending to file \"";
                 temp_message += path;
                 temp_message += "\" was succesful";
-                // file.close();
+                myFile.flush();
             }
             else
             {
