@@ -44,8 +44,9 @@
 #include "libraries/can/chips/MCP2518FD/MCP2518FD.h"
 
 // * IMU
-#include "libraries/imu/MPU9250.h"
-#include "libraries/imu/quaternionFilters.h"
+//#include "libraries/imu/MPU9250.h"
+//#include "libraries/imu/quaternionFilters.h"
+//#include "libraries/imu/mpu9250/SparkFunMPU9250-DMP.h"
 
 // * Bluetooth Low Energy
 #include "libraries/bluetooth/bluetooth_low_energy/ble.h"
