@@ -33,8 +33,8 @@ MPU9250::MPU9250(uint8_t address, TwoWire &wirePort, uint32_t clock_frequency)
 
   _csPin = NOT_SPI; // Used to tell the library that the sensor is using I2C
 
-  _wire->begin();
-  _wire->setClock(_interfaceSpeed);
+  // _wire->begin();
+  // _wire->setClock(_interfaceSpeed);
 }
 
 void MPU9250::setupMagForSPI()

@@ -72,7 +72,7 @@ class TerminalMessage
 public:
     TerminalMessage() {}
 
-    TerminalMessage(String message_body, String message_system = "   ", TERMINAL_MESSAGE_TYPE message_type = INFO, long time_stamp = 0, long process_time_taken = 0)
+    TerminalMessage(String message_body, String message_system = "   ", TERMINAL_MESSAGE_TYPE message_type = INFO, long time_stamp = micros(), long process_time_taken = 0)
     {
         body = message_body;
         system = message_system;

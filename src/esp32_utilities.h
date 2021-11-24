@@ -45,7 +45,7 @@
 
 // * IMU
 //#include "libraries/imu/MPU9250.h"
-//#include "libraries/imu/quaternionFilters.h"
+#include "libraries/imu/quaternionFilters.h"
 //#include "libraries/imu/mpu9250/SparkFunMPU9250-DMP.h"
 
 // * Bluetooth Low Energy
