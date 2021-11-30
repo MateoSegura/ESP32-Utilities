@@ -1,14 +1,9 @@
 /*
  * File Name: ota_update_example.cpp
- * Hardware needed: No extra hardware needed, just a good ol' ESP32 dev. board
+ * Hardware needed: No extra hardware needed, just a ESP32 dev. board
  *
  * Copyright 2021, Mateo Segura, All rights reserved.
  */
-
-#include <Arduino.h>
-#include <esp32_utilities.h>
-#include <WiFi.h>
-#include <ArduinoOTA.h>
 
 //******************** READ ME
 //
@@ -34,6 +29,11 @@
 // There's an RTOS version of this example under "examples/rtos/terminal_example_rtos.cpp"
 //
 // Mateo :)
+
+#include <Arduino.h>
+#include <esp32_utilities.h>
+#include <WiFi.h>
+#include <ArduinoOTA.h>
 
 //******************** SETTINGS
 #define LED_BUILT_IN 2

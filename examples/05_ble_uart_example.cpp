@@ -1,14 +1,11 @@
 /*
  * File Name: ble_uart_example.cpp
- * Hardware needed: Any ESP32 dev. board
+ * Hardware needed: No extra hardware needed, just a ESP32 dev. board
  *
  * ESP32 Dev. Board: https://www.sparkfun.com/products/15663
  *
  * Copyright 2021, Mateo Segura, All rights reserved.
  */
-
-#include <Arduino.h>
-#include <esp32_utilities.h>
 
 //******************** READ ME
 //
@@ -38,6 +35,9 @@
 // https://github.com/nkolban/esp32-snippets/tree/master/Documentation
 //
 // Mateo :)
+
+#include <Arduino.h>
+#include <esp32_utilities.h>
 
 //******************** SETTINGS
 

@@ -5,11 +5,20 @@
  * Copyright 2021, Mateo Segura, All rights reserved.
  */
 
+//******************** READ ME
+//
+// Simple example of how to use the SX1509 I/O expansion
+//
+// Due to the limited I/O of the ESP32, this IC comes in handy where a lot of I/O is required
+//
+// The library used is a revised version of Sparkfun's SX1509. All functions remained the same
+//
+// https://github.com/sparkfun/SparkFun_SX1509_Arduino_Library
+//
+// Mateo :)
+
 #include <Arduino.h>
 #include <esp32_utilities.h>
-
-//******************** READ ME
-
 //******************** SETTINGS
 
 //* UART0
@@ -19,7 +28,7 @@
 
 //* I/O Expansion
 #define IO_EXPANSION_INPUT_PIN 0 // Connect pin 0 of the expansion to GPIO 26 of the ESP
-#define IO_EXPANSION_INT_PIN 36  // Input only. Need's external pull up resistor
+#define IO_EXPANSION_INT_PIN 13  // Input only. Need's external pull up resistor
 #define SX1509_I2C_ADDR 0x3E     // ADDR0 & ADDR1 are set to 0
 
 //* I2C
@@ -45,7 +54,7 @@ uint16_t io_expansion_interrupt_queue_length = 10;
 
 //******************** INTERRUPTS
 int interrupt_time = 0;
-
+bool request = false;
 bool state = false;
 
 static void IRAM_ATTR externalIO_Interrupt()
@@ -91,7 +100,7 @@ void setup()
     esp.uart0.println("\n\n");
 
     // 2. Init Terminal
-    terminal.begin(&esp.uart0, MICROS_TIMESTAMP_ENABLED, SYSTEM_TIME_ENABLED);
+    terminal.begin(esp.uart0, MICROS_TIMESTAMP_ENABLED, SYSTEM_TIME_ENABLED);
 
     // 3. Init I2C bus
     esp.i2c0.begin(I2C0_SDA_PIN, I2C0_SCL_PIN, I2C0_FREQUENCY); // Refer to soc_example.cpp for information on this function
@@ -123,9 +132,7 @@ void setup()
     // 8. Attach interrupt
     io_expansion.enableInterrupt(IO_EXPANSION_INPUT_PIN, FALLING);
 
-    // 9.
-
-    // 7. Create IO handle task
+    // 9
     xTaskCreatePinnedToCore(handleExtInterrupt,
                             "Ext. IO",
                             10000,
@@ -134,15 +141,14 @@ void setup()
                             NULL,
                             1);
 
-    pinMode(23, OUTPUT);
-    pinMode(2, OUTPUT);
-    digitalWrite(23, HIGH);
+    pinMode(27, OUTPUT);
+    digitalWrite(27, HIGH);
 
     while (1)
     {
         delay(500);
-        digitalWrite(23, LOW);
-        digitalWrite(23, HIGH);
+        digitalWrite(27, LOW);
+        digitalWrite(27, HIGH);
     }
 
     vTaskDelete(NULL);

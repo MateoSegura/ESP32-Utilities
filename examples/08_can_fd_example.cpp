@@ -5,10 +5,6 @@
  * Copyright 2021, Mateo Segura, All rights reserved.
  */
 
-#include <Arduino.h>
-#include <esp32_utilities.h>
-#include <ACAN2517FD.h>
-
 //******************** READ ME
 //
 // Simple example of how to use an object named "Arduino OTA feature". Read on...
@@ -19,6 +15,10 @@
 // There's an RTOS version of this example under "examples/rtos/terminal_example_rtos.cpp"
 //
 // Mateo :)
+
+#include <Arduino.h>
+#include <esp32_utilities.h>
+#include <ACAN2517FD.h>
 
 //******************** SETTINGS
 #define LED_BUILT_IN 2

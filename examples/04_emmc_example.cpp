@@ -8,9 +8,6 @@
  * Copyright 2021, Mateo Segura, All rights reserved.
  */
 
-#include <Arduino.h>
-#include <esp32_utilities.h>
-
 //******************** READ ME
 //
 // Simple example of how to use the "EMMC_Memory" object.
@@ -33,6 +30,9 @@
 // that occurs when you try to do an Over The Air Update while connected in 4-bit emmc mode.
 //
 // Mateo :)
+
+#include <Arduino.h>
+#include <esp32_utilities.h>
 
 //******************** R/W TESTS CONFIGURATION
 #define BLOCKS_TO_WRITE 1000 // Blocks of 512 bytes

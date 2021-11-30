@@ -2,14 +2,12 @@
  * File Name: rtc_example.cpp
  * Hardware needed: One of the following modules, or any dev. board with these ICs
  *
+ * ESP32 Dev. Board: https://www.sparkfun.com/products/15663
  * RV8803: https://www.sparkfun.com/products/16281
  * RV3027: https://www.sparkfun.com/products/15486
  *
  * Copyright 2021, Mateo Segura, All rights reserved.
  */
-
-#include <Arduino.h>
-#include <esp32_utilities.h>
 
 //******************** READ ME
 //
@@ -29,6 +27,9 @@
 // Both chips can be connected through an I2C bus, at 400 KHz max.
 //
 // Mateo :)
+
+#include <Arduino.h>
+#include <esp32_utilities.h>
 
 //******************** SETTINGS
 
