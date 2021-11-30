@@ -9,7 +9,8 @@
 
 //*********************************************************     READ ME    **********************************************************/
 
-// * The purpose for this library is to offer the following features to the programmer without adding too much processing overhead
+// * The purpose for this library is to offer the following features to the programmer without adding
+// * too much overhead
 // *
 // * 1. Time stamping
 // * 2. Process time (how long a given function took to excecute)
@@ -38,13 +39,11 @@
 // *
 // * -- Please refer to the example included with the library for usage.
 // *
-// *
 // * -- Future Improvements
 // *
 // *    1. Allow system independant debugging
 // *    2. Set debug levels (error only, warning only, etc)
 // *
-// * Written by: Mateo Segura
 
 //*****************************************************     LIBRARY SETTINGS    *****************************************************/
 // * None.
