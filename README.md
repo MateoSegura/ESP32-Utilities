@@ -5,6 +5,8 @@ They implement useful methods, such as writting/reading files, bluetooth communi
 
 These libraries can be used with/without FreeRTOS.
 
+![alt text](https://github.com/MateoSegura/ESP32-Utilities/blob/main/images/libraries_overview.jpg)
+
 # Why should I use these libraries?
 
 These libraries are great for writting performant applications, fast. The drivers in these libraries are for ICs that have great features for Control Systems, such as high quality ADC, a CAN FD controller with MANY useful features, an Internal motion Unit, I/O expansion and external memory (uSD).
