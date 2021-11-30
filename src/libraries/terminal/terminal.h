@@ -21,7 +21,6 @@
 // * -- Example terminal output WITHOUT real time clock chip
 // *
 // *       * Time Stamp *         * Process Time *   * Core *  * Message Type *   * System *              * Debug Message *
-// *
 // *    [            51 mS]---------[+   11 mS]--------[1]----------[INF]------------[TER]------------- Terminal initialized
 // *    [            59 mS]---------[+    0 mS]--------[1]----------[INF]------------[LED]------------- Debugging LED initialized
 // *    [           117 mS]---------[+   58 mS]--------[1]----------[INF]------------[MEM]------------- eMMC Storage initialized
@@ -30,11 +29,10 @@
 // *
 // * -- Example terminal output WITH real time clock chip
 // *
-// *                                * Time Stamp *        * Process Time *  * Core *   * Message Type *   * System *              * Debug Message *
-// *
+// *         * System time*        * Time Stamp *        * Process Time *  * Core *   * Message Type *    * System *              * Debug Message *
 // *    [ET       00:04:35.078] [            51 mS]---------[+   11 mS]--------[1]----------[INF]------------[TER]------------- Terminal initialized
-// *    [ET       00:04:35.078] [            59 mS]---------[+    0 mS]--------[1]----------[INF]------------[LED]------------- Debugging LED initialized
-// *    [ET       00:04:35.078] [           117 mS]---------[+   58 mS]--------[1]----------[INF]------------[MEM]------------- eMMC Storage initialized
+// *    [ET       00:04:35.082] [            59 mS]---------[+    8 mS]--------[1]----------[INF]------------[LED]------------- Debugging LED initialized
+// *    [ET       00:04:35.140] [           117 mS]---------[+   58 mS]--------[1]----------[INF]------------[MEM]------------- eMMC Storage initialized
 // *    ....
 // *    ... So on and so forth
 // *
