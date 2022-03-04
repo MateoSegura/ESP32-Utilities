@@ -14,6 +14,9 @@
 //* To do list:
 // TODO: Implement examples
 
+// This is a test comment on a new branch
+//
+//
 //*********************************************************     READ ME    **********************************************************/
 
 // * The purpose for this library is to offer the following features to the programmer without adding too much processing overhead
