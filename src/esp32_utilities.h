@@ -14,6 +14,11 @@
 //* To do list:
 // TODO: Implement examples
 
+
+// Hello there this is a git test
+
+
+
 //*********************************************************     READ ME    **********************************************************/
 
 // * The purpose for this library is to offer the following features to the programmer without adding too much processing overhead
