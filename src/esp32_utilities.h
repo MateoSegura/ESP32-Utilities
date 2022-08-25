@@ -30,7 +30,7 @@
 #include "libraries/terminal/terminal.h"
 
 // * Real Time Clock
-#include "libraries/real_time_clock/rtc.h"
+// #include "libraries/real_time_clock/rtc.h"
 
 // TODO: Implement weekday functionality in update time function
 // TODO: Implement string return functionality
