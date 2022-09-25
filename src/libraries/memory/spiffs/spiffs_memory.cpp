@@ -20,7 +20,7 @@ ESP_ERROR SPIFFS_Memory::begin()
     ESP_ERROR err;
     err.on_error = false;
 
-    if (SPIFFS.begin() != true)
+    if (SPIFFS.begin(true) != true)
     {
         err.on_error = true;
         err.debug_message = "Error initializing SPIFFS";
